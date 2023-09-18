@@ -1,0 +1,46 @@
+[{
+    "id": 1,
+    "title": "Iphone",
+    "description": "Telefono",
+    "price": "1200",
+    "thumbnail": "img.src",
+    "code": "123",
+    "stock": "25",
+    "password": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+}, {
+    "id": 2,
+    "title": "Iphone",
+    "description": "Telefono",
+    "price": "1200",
+    "thumbnail": "img.src",
+    "code": "123",
+    "stock": "25",
+    "password": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+}, {
+    "id": 3,
+    "title": "Iphone",
+    "description": "Telefono",
+    "price": "1200",
+    "thumbnail": "img.src",
+    "code": "123",
+    "stock": "25",
+    "password": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+}, {
+    "id": 4,
+    "title": "Iphone",
+    "description": "Telefono",
+    "price": "1200",
+    "thumbnail": "img.src",
+    "code": "123",
+    "stock": "25",
+    "password": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+}, {
+    "id": 5,
+    "title": "Iphone",
+    "description": "Telefono",
+    "price": "1200",
+    "thumbnail": "img.src",
+    "code": "123",
+    "stock": "25",
+    "password": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+}]
