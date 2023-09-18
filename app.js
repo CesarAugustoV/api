@@ -13,13 +13,15 @@ app.get('/', (req, res) => {
     res.send('Probando...')
 })
 
-app.get('/products', async(req, res) => {
+app.get('/products', async (req, res) => {
 
     const products = await manager.getProducts();
 
-    const limit = parseInt(req.query.limit);
+    const param = parseInt(req.query.limit);
 
-    if(limit){
+    const limit = param && param > products.length ? products.length : param;
+
+    if (limit) {
 
         const productsSlice = products.slice(0, limit);
 
