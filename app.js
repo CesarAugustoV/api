@@ -21,13 +21,23 @@ app.get('/products', async (req, res) => {
 
     const limit = param && param > products.length ? products.length : param;
 
-    if (limit) {
+
+    if (limit && limit > 0) {
 
         const productsSlice = products.slice(0, limit);
 
         res.send(productsSlice)
 
         return
+
+    } else if (limit <= 0 || Number.isNaN(limit)) {
+
+
+        const error = new Error("El parametro ingresado no es valido.");
+        res.send(error)
+        throw error;
+
+
     }
 
     res.send(products);
