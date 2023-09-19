@@ -17,22 +17,22 @@ app.get('/products', async (req, res) => {
 
     const products = await manager.getProducts();
 
-    const param = parseInt(req.query.limit);
+    const {
+        limit
+    } = req.query;
 
-    const limit = param && param > products.length ? products.length : param;
+    const max = limit && limit > products.length ? products.length : limit;
 
 
-    if (limit && limit > 0) {
+    if (max > 0) {
 
-        const productsSlice = products.slice(0, limit);
+        const productsSlice = products.slice(0, max);
 
         res.send(productsSlice)
 
         return
 
-    } else if (limit <= 0 || Number.isNaN(limit)) {
-
-
+    } else if (max <= 0 && Number.isNaN(max)) {
         const error = new Error("El parametro ingresado no es valido.");
         res.send(error)
         throw error;
