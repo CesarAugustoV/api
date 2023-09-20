@@ -13,42 +13,46 @@ app.get('/', (req, res) => {
     res.send('Probando...')
 })
 
+
+//products & limit
+
 app.get('/products', async (req, res) => {
+    try {
+        const products = await manager.getProducts();
 
-    const products = await manager.getProducts();
+        const limit = isNaN(req.query.limit) ? undefined : parseInt(req.query.limit);
 
-    const {
-        limit
-    } = req.query;
+        if (isNaN(limit) || limit <= 0) {
+            throw new Error("El parámetro ingresado no es válido.");
+        }
 
-    const max = limit && limit > products.length ? products.length : limit;
+        const productsSlice = products.slice(0, limit);
 
+        res.send(productsSlice);
 
-    if (max > 0) {
+    } catch (error) {
 
-        const productsSlice = products.slice(0, max);
-
-        res.send(productsSlice)
-
-        return
-
-    } else if (max <= 0 && Number.isNaN(max)) {
-        const error = new Error("El parametro ingresado no es valido.");
-        res.send(error)
-        throw error;
-
+        res.status(400).send(error.message);
 
     }
+});
 
-    res.send(products);
 
-})
+//Products id
 
 app.get('/products/:pid', async (req, res) => {
+    try {
+        const id = parseInt(req.params.pid);
 
-    const id = parseInt(req.params.pid);
-    const products = await manager.getProductById(id);
-    res.send(products)
+        const products = await manager.getProductById(id);
+
+        res.send(products)
+
+    } catch (error) {
+
+        res.status(400).send(error.message);
+        
+    }
 })
 
 
