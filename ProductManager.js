@@ -1,5 +1,10 @@
-import {existsSync, promises } from "fs";
-import { createHash } from "crypto";
+import {
+    existsSync,
+    promises
+} from "fs";
+import {
+    createHash
+} from "crypto";
 
 
 const path = 'products.json';
@@ -12,11 +17,14 @@ export class ProductManager {
         this.products = [];
     }
 
-    async getProducts() {
+    async getProducts(queryObj) {
+        const limit = queryObj ? queryObj.limit : undefined;
+
         try {
             if (existsSync(this.path)) {
-                const productsFile = await promises.readFile(this.path, 'utf-8')
-                return JSON.parse(productsFile)
+                const usersFile = await promises.readFile(this.path, 'utf-8');
+                const usersData = JSON.parse(usersFile);
+                return limit ? usersData.slice(0, +limit) : usersData;
             } else {
                 return [];
             }
@@ -75,9 +83,9 @@ export class ProductManager {
     }
 
     async getProductById(idProduct) {
-
         try {
             const products = await this.getProducts();
+
             const product = products.find(p => p.id === idProduct)
 
             if (!product) {

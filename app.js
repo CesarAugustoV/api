@@ -10,7 +10,7 @@ const manager = new ProductManager(path);
 
 
 app.get('/', (req, res) => {
-    res.send('Probando...')
+    res.send('Probando Home...')
 })
 
 
@@ -18,17 +18,10 @@ app.get('/', (req, res) => {
 
 app.get('/products', async (req, res) => {
     try {
-        const products = await manager.getProducts();
+        
+        const products = await manager.getProducts(req.query);
 
-        const limit = isNaN(req.query.limit) ? undefined : parseInt(req.query.limit);
-
-        if (isNaN(limit) || limit <= 0) {
-            throw new Error("El parámetro ingresado no es válido.");
-        }
-
-        const productsSlice = products.slice(0, limit);
-
-        res.send(productsSlice);
+        res.send(products);
 
     } catch (error) {
 
@@ -42,8 +35,9 @@ app.get('/products', async (req, res) => {
 
 app.get('/products/:pid', async (req, res) => {
     try {
+ 
         const id = parseInt(req.params.pid);
-
+        
         const products = await manager.getProductById(id);
 
         res.send(products)
@@ -51,7 +45,7 @@ app.get('/products/:pid', async (req, res) => {
     } catch (error) {
 
         res.status(400).send(error.message);
-        
+
     }
 })
 
