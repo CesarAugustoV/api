@@ -1,20 +1,19 @@
 import { Router } from "express";
-import { authMiddleware } from "../middlewares/auth.middleware.js"
-import productManager from "../ProductManager.js"
+import cartsManager from "../CartsManager.js"
 
 
 const router = Router();
 
 
-//Products
+//Carts
 router.get('/', async (req, res) => {
     try {
 
-        const products = await productManager.getProducts(req.query);
+        const carts = await cartsManager.getCarts(req.query);
 
         res.status(200).json({
             message: "Products found",
-            products
+            carts
         })
 
     } catch (error) {
@@ -24,22 +23,23 @@ router.get('/', async (req, res) => {
 
     }
 });
-router.get('/:pid', async (req, res) => {
+
+router.get('/:cid', async (req, res) => {
     try {
 
-        const id = parseInt(req.params.pid);
+        const id = parseInt(req.params.cid);
 
-        const product = await productManager.getProductById(id);
+        const cart = await cartsManager.getCartById(id);
 
-        if (!product) {
+        if (!cart) {
             return res.status(404).json({
-                message: 'Product not found whit the id provided'
+                message: 'Cart not found whit the id provided'
             })
         }
 
         res.status(200).json({
-            message: "Product found",
-            product
+            message: "Cart Found",
+            cart
         })
 
     } catch (error) {
@@ -50,27 +50,15 @@ router.get('/:pid', async (req, res) => {
 
     }
 })
-router.post('/', authMiddleware, async (req, res) => {
+
+router.post('/', async (req, res) => {
 
     const {
-        title,
-        description,
-        code,
-        price,
-        status = true,
-        stock,
-        category,
-        thumbnails = 'No image'
+        products = []
     } = req.body;
 
-    if (!title || !description || !price || !stock || !code || !category) {
-        return res.status(404).json({
-            message: 'Some data is missing.'
-        })
-    };
-
     try {
-        const response = await productManager.addProduct(req.body);
+        const response = await cartsManager.addCart(products);
 
         res.status(200).json({
             message: "Product created",
@@ -84,6 +72,33 @@ router.post('/', authMiddleware, async (req, res) => {
 
     }
 })
+
+router.post('/:cid/product/:pid', async (req, res) => {
+
+
+    const { cid, pid } = req.params;
+
+    try {
+
+        const response = await cartsManager.addProductCart(+cid, +pid);
+
+        if (!response) {
+            return res.status(404).json({
+                message: "Cart not found with the id provided"
+            });
+        }
+
+        res.status(200).json({
+            message: "Product added", response
+        })
+        
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+})
+
 router.delete('/:pid', async (req, res) => {
     const {
         pid
