@@ -28,12 +28,7 @@ class CartsManager {
         }
     }
 
-    async addCart(products) {
-
-        // validaciones
-        if (!products) {
-            throw new Error('Products required');
-        };
+    async addCart() {
 
         try {
 
@@ -41,16 +36,16 @@ class CartsManager {
 
             let id = carts.length === 0 ? 1 : carts[carts.length - 1].id + 1;
 
-            const newCarts = {
+            const newCart = {
                 id,
-                products
+                products: []
             };
 
-            carts.push(newCarts);
+            carts.push(newCart);
 
             await promises.writeFile(this.path, JSON.stringify(carts));
 
-            return newCarts;
+            return newCart;
 
         } catch (error) {
             throw error
@@ -124,53 +119,6 @@ class CartsManager {
 
     }
 
-    async deleteProduct(idProduct) {
-
-        try {
-
-            const products = await this.getProducts();
-
-            const product = products.find(p => p.id === idProduct);
-
-            if (product) {
-
-                const newArrayProducts = products.filter(p => p.id !== idProduct);
-
-                await promises.writeFile(this.path, JSON.stringify(newArrayProducts))
-            }
-
-
-            return product
-
-        } catch (error) {
-            throw error
-        }
-    }
-
-    async updateProduct(id, obj) {
-        try {
-            const products = await this.getProducts({})
-            const index = products.findIndex(p => p.id === id);
-
-            if (index === -1) {
-                return null
-            }
-
-            const updateProduct = {
-                ...products[index],
-                ...obj
-            };
-
-            products.splice(index, 1, updateProduct)
-
-            await promises.writeFile(this.path, JSON.stringify(products))
-
-            return updateProduct;
-
-        } catch (error) {
-            throw error
-        }
-    }
 }
 
 //path del archivo productos

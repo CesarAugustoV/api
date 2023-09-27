@@ -49,7 +49,7 @@ router.get('/:cid', async (req, res) => {
         });
 
     }
-})
+});
 
 router.post('/', async (req, res) => {
 
@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
 
         res.status(200).json({
             message: "Product created",
-            product: response
+            cart: response
         })
 
     } catch (error) {
@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
         });
 
     }
-})
+});
 
 router.post('/:cid/product/:pid', async (req, res) => {
 
@@ -97,61 +97,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
             message: error.message
         });
     }
-})
-
-router.delete('/:pid', async (req, res) => {
-    const {
-        pid
-    } = req.params;
-
-    try {
-        const response = await productManager.deleteProduct(+pid);
-
-        if (!response) {
-            return res.status(404).json({
-                message: "User not found with the id provided"
-            });
-        }
-
-        res.status(200).json({
-            message: "Product deleted"
-        })
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-
-})
-router.put('/:pid', async (req, res) => {
-    const {
-        pid
-    } = req.params;
-
-    try {
-
-        const response = await productManager.updateProduct(+pid, req.body);
-
-        if (!response) {
-            return res.status(404).json({
-                message: "User not found with the id provided"
-            });
-        }
-
-        res.status(200).json({
-            message: "Product updated", response
-        })
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-    }
-})
+});
 
 
 

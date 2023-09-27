@@ -1,5 +1,9 @@
-import { Router } from "express";
-import { authMiddleware } from "../middlewares/auth.middleware.js"
+import {
+    Router
+} from "express";
+import {
+    authMiddleware
+} from "../middlewares/auth.middleware.js"
 import productManager from "../ProductManager.js"
 
 
@@ -11,6 +15,12 @@ router.get('/', async (req, res) => {
     try {
 
         const products = await productManager.getProducts(req.query);
+
+        if (!products.length) {
+            res.status(200).json({
+                message: 'No products'
+            })
+        }
 
         res.status(200).json({
             message: "Products found",
@@ -24,16 +34,18 @@ router.get('/', async (req, res) => {
 
     }
 });
-router.get('/:pid', async (req, res) => {
-    try {
 
-        const id = parseInt(req.params.pid);
+router.get('/:pid', async (req, res) => {
+    
+    const id = parseInt(req.params.pid);
+
+    try {
 
         const product = await productManager.getProductById(id);
 
         if (!product) {
             return res.status(404).json({
-                message: 'Product not found whit the id provided'
+                message: 'Product not found whith that id'
             })
         }
 
@@ -49,18 +61,17 @@ router.get('/:pid', async (req, res) => {
         });
 
     }
-})
-router.post('/', authMiddleware, async (req, res) => {
+});
+
+router.post('/', async (req, res) => {
 
     const {
         title,
         description,
         code,
         price,
-        status = true,
         stock,
-        category,
-        thumbnails = 'No image'
+        category
     } = req.body;
 
     if (!title || !description || !price || !stock || !code || !category) {
@@ -83,7 +94,8 @@ router.post('/', authMiddleware, async (req, res) => {
         });
 
     }
-})
+});
+
 router.delete('/:pid', async (req, res) => {
     const {
         pid
@@ -94,7 +106,7 @@ router.delete('/:pid', async (req, res) => {
 
         if (!response) {
             return res.status(404).json({
-                message: "User not found with the id provided"
+                message: "No product found with that id"
             });
         }
 
@@ -110,7 +122,8 @@ router.delete('/:pid', async (req, res) => {
 
     }
 
-})
+});
+
 router.put('/:pid', async (req, res) => {
     const {
         pid
@@ -127,7 +140,8 @@ router.put('/:pid', async (req, res) => {
         }
 
         res.status(200).json({
-            message: "Product updated", response
+            message: "Product updated",
+            response
         })
 
     } catch (error) {
@@ -136,7 +150,7 @@ router.put('/:pid', async (req, res) => {
             message: error.message
         });
     }
-})
+});
 
 
 

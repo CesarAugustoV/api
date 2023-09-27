@@ -2,9 +2,6 @@ import {
     existsSync,
     promises
 } from "fs";
-import {
-    createHash
-} from "crypto";
 
 class ProductManager {
 
@@ -32,25 +29,12 @@ class ProductManager {
 
     async addProduct(product) {
 
-        const {
-            title,
-            description,
-            price,
-            code,
-            stock
-        } = product;
-
-        // validaciones
-        if (!title || !description || !price || !stock || !code) {
-            throw new Error('Some data is missing');
-        };
-
         try {
 
             const products = await this.getProducts();
 
             if (products.length > 0) {
-                const isCodeRepeat = products.some((p) => p.code === code);
+                const isCodeRepeat = products.some((p) => p.code === product.code);
 
                 if (isCodeRepeat) {
                     throw new Error('Code already used');
@@ -59,21 +43,18 @@ class ProductManager {
 
             let id = products.length === 0 ? 1 : products[products.length - 1].id + 1;
 
-
-            const hashPassword = product.password ? createHash('sha256').update(product.password).digest('hex') : undefined
-
-            const newUser = {
+            const newProduct = {
                 id,
-                thumbnail: product.thumbnail || 'No image',
                 ...product,
-                password: hashPassword
+                thumbnail: product.thumbnail || 'No image',
+                status: true,
             };
 
-            products.push(newUser);
+            products.push(newProduct);
 
             await promises.writeFile(this.path, JSON.stringify(products));
 
-            return newUser;
+            return newProduct;
 
         } catch (error) {
             throw error
@@ -154,79 +135,3 @@ const path = 'products.json';
 const productManager = new ProductManager(path);
 
 export default productManager;
-
-
-
-
-
-
-
-
-
-
-
-
-// const test = async () => {
-
-
-
-//     // const manager1 = new ProductManager(path);
-//     // // // 1
-//     // // console.log(await manager1.getProducts());
-
-//     // // // 2
-//     // await manager1.addProduct({
-//     //     title: 'Iphone',
-//     //     description: 'Telefono',
-//     //     price: '1200',
-//     //     thumbnail: 'img.src',
-//     //     code: '123',
-//     //     stock: '25',
-//     //     password: '1234567890'
-//     // })
-
-//     // await manager1.addProduct({
-//     //     title: 'Ipad',
-//     //     description: 'Tablet',
-//     //     price: '900',
-//     //     thumbnail: 'img.src',
-//     //     code: '1234',
-//     //     stock: '15'
-//     // })
-
-//     // await manager1.addProduct({
-//     //     title: 'Tv',
-//     //     description: 'Televisor',
-//     //     price: '700',
-//     //     thumbnail: 'img.src',
-//     //     code: '12345',
-//     //     stock: '10'
-//     // })
-
-//     // console.log(await manager1.getProducts());
-
-//     // 3
-//     // const productoId = await manager1.getProductById(4);
-
-//     // console.log(productoId);
-
-
-//     // 4
-//     // await manager1.updateProduct(1, {
-//     //         id: 10,
-//     //         title: 'Samsung',
-//     //         description: 'Telefono',
-//     //         thumbnail: 'fotossamsung.gif',
-//     //         stock: '15'
-//     //     })
-
-//     //     const productos = await manager1.getProducts();
-//     //     console.log(productos);
-
-//     // 5
-//     // const productoEliminado = await manager1.deleteProduct(3);
-
-//     // console.log(productoEliminado);
-// }
-
-// test();
