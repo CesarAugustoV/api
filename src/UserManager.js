@@ -5,6 +5,7 @@ import {
 import {
     createHash
 } from "crypto";
+import { throws } from "assert";
 
 class UserManager {
 
@@ -33,30 +34,23 @@ class UserManager {
     async addUser(user) {
 
         const {
-            nombres,
-            correo,
-            telefono,
-            code,
-            password,
-            age
+            first_name,
+            last_name,
+            email,
+            password, 
         } = user;
-
-        // validaciones
-        if (!nombres || !correo || !telefono || !password || !code || !age) {
-            throw new Error('Some data is missing');
+    
+        
+        
+        if (!first_name || !last_name || !email || !password ) {
+            
+            throw new Error ('Some data is missing.');
+            
         };
 
         try {
 
             const users = await this.getUsers();
-
-            if (users.length > 0) {
-                const isCodeRepeat = users.some((p) => p.code === code);
-
-                if (isCodeRepeat) {
-                    throw new Error('Code already used');
-                }
-            }
 
             let id = users.length === 0 ? 1 : users[users.length - 1].id + 1;
 
@@ -83,8 +77,7 @@ class UserManager {
     async getUserById(idUser) {
         try {
             const users = await this.getUsers();
-
-            const user = users.find(p => p.id === idUser)
+            const user = users.find(p => p.id === parseInt(idUser))
 
             if (!user) {
                 return null;
@@ -104,7 +97,7 @@ class UserManager {
 
             const users = await this.getUsers();
 
-            const user = users.find(p => p.id === idUser);
+            const user = users.find(p => p.id === parseInt(idUser));
 
             if (user) {
 

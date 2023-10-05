@@ -142,6 +142,38 @@ router.put('/:pid', async (req, res) => {
     }
 });
 
+router.post('/signup', async (req, res)=>{
+    const {
+        first_name,
+        last_name,
+        email,
+        password, 
+    } = req.body;
+
+    
+    
+    if (!first_name || !last_name || !email || !password ) {
+        
+        return res.status(404).json({
+            message: 'Some data is missing.'
+        })
+    };
+
+    try {
+        console.log('aqui');
+        const response = await userManager.addUser(req.body);
+
+        res.redirect(`/api/views/user/${response.id}`)
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+})
+
 
 
 export default router;

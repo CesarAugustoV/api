@@ -1,0 +1,36 @@
+<h3>Agregar Producto</h3>
+<form id="form">
+
+    Title: <input type="text" name="title" id="title"><br>
+    Description: <textarea name="description" id="description"></textarea><br>
+    Code: <input type="text" name="code" id="code"><br>
+    Price: <input type="text" name="price" id="price"><br>
+    Stock: <input type="text" name="stock" id="stock"><br>
+    Category: <input type="text" name="category" id="category"><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+<form id="formDelete" method="post">
+    ID: <input type="number" name="id" id="id"><br>
+    <input type="submit" value="Submit">
+</form>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Categoría</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

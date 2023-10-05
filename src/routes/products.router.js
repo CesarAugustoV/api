@@ -1,10 +1,8 @@
 import {
     Router
 } from "express";
-import {
-    authMiddleware
-} from "../middlewares/auth.middleware.js"
-import productManager from "../ProductManager.js"
+import productManager from "../ProductManager.js";
+import { socketServer } from "../server.js";
 
 
 const router = Router();
@@ -81,12 +79,17 @@ router.post('/', async (req, res) => {
     };
 
     try {
+
         const response = await productManager.addProduct(req.body);
 
         res.status(200).json({
             message: "Product created",
             product: response
         })
+
+        const products = await productManager.getProducts();
+
+        socketServer.emit('products', products)
 
     } catch (error) {
         res.status(500).json({
@@ -113,6 +116,10 @@ router.delete('/:pid', async (req, res) => {
         res.status(200).json({
             message: "Product deleted"
         })
+
+        const products = await productManager.getProducts();
+        
+        socketServer.emit('products', products)
 
     } catch (error) {
 
