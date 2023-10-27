@@ -1,31 +1,31 @@
-import { productsModel } from "../../models/products.model.js";
+import { cartsModel } from "../models/carts.model.js";
 
-class ProductsManager {
+class CartsManager {
     async findAll(){
-        const result = await productsModel.find();
+        const result = await cartsModel.find();
         return result;
     }
 
     async findById(id){
-        const result = await productsModel.findById(id);
+        const result = await cartsModel.findById(id);
         return result;
     }
 
     async createOne(obj){
-        const result = await productsModel.create(obj)
+        const result = await cartsModel.create(obj)
         return result;
 
     }
 
     async updateOne(id, obj){
-        const result = productsModel.updateOne({_id:id}, obj);
+        const result = cartsModel.updateOne({_id:id}, obj);
         return result;
     }
 
     async deleteOne(id){
-        const result = await productsModel.deleteOne({_id: id});
+        const result = await cartsModel.deleteOne({_id: id});
         return result
     }
 }
 
-export const productsManager = new ProductsManager();
+export const cartsManager = new CartsManager();
