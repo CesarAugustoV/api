@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/first.css">
-    <title>Handlebars</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="{{stylesheetURL}}">
+    <title>{{title}}</title>
 </head>
-
 <body>
-    <h1>First Handlebars Layout</h1>
+    <div>
+        <h1>{{title}}</h1> <br>
+    </div>
     {{{body}}}
 </body>
 

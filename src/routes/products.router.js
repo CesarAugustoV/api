@@ -1,7 +1,7 @@
 import {
     Router
 } from "express";
-import productManager from "../ProductManager.js";
+import {productsManager} from "../dao/db/manager/productsManager.js";
 import { socketServer } from "../server.js";
 
 
@@ -12,7 +12,7 @@ const router = Router();
 router.get('/', async (req, res) => {
     try {
 
-        const products = await productManager.getProducts(req.query);
+        const products = await productsManager.findAll();
 
         if (!products.length) {
             res.status(200).json({
@@ -24,6 +24,44 @@ router.get('/', async (req, res) => {
             message: "Products found",
             products
         })
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+});
+
+router.post('/', async (req, res) => {
+
+    // const {
+    //     title,
+    //     description,
+    //     code,
+    //     price,
+    //     stock,
+    //     category
+    // } = req.body;
+
+    // if (!title || !description || !price || !stock || !code || !category) {
+    //     return res.status(404).json({
+    //         message: 'Some data is missing.'
+    //     })
+    // };
+
+    try {
+
+        const createdProduct = await productsManager.createOne(req.body);
+
+        res.status(200).json({
+            message: "Product created",
+            product: createdProduct
+        });
+
+        const products = await productsManager.findAll();
+
+        socketServer.emit('products', products)
 
     } catch (error) {
         res.status(500).json({
@@ -61,43 +99,6 @@ router.get('/:pid', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
-
-    const {
-        title,
-        description,
-        code,
-        price,
-        stock,
-        category
-    } = req.body;
-
-    if (!title || !description || !price || !stock || !code || !category) {
-        return res.status(404).json({
-            message: 'Some data is missing.'
-        })
-    };
-
-    try {
-
-        const response = await productManager.addProduct(req.body);
-
-        res.status(200).json({
-            message: "Product created",
-            product: response
-        })
-
-        const products = await productManager.getProducts();
-
-        socketServer.emit('products', products)
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-});
 
 router.delete('/:pid', async (req, res) => {
     const {
@@ -105,20 +106,20 @@ router.delete('/:pid', async (req, res) => {
     } = req.params;
 
     try {
-        const response = await productManager.deleteProduct(+pid);
+        const deletedProduct = await productsManager.deleteOne(pid);
 
-        if (!response) {
+        if (!deletedProduct) {
             return res.status(404).json({
                 message: "No product found with that id"
             });
         }
 
         res.status(200).json({
-            message: "Product deleted"
+            message: "Product deleted", deletedProduct
         })
 
-        const products = await productManager.getProducts();
-        
+        const products = await productsManager.findAll();
+
         socketServer.emit('products', products)
 
     } catch (error) {

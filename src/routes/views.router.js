@@ -3,8 +3,16 @@ import {
 } from "express";
 import userManager from "../UserManager.js";
 import productManager from "../ProductManager.js";
-import {socketServer} from "../server.js"
-
+import {
+    socketServer
+} from "../server.js"
+import {
+    productsManager
+} from "../dao/db/manager/productsManager.js";
+import {
+    __dirname
+} from "../utils.js";
+import { messageManager } from "../dao/db/manager/messagesManager.js";
 
 const router = Router();
 
@@ -82,7 +90,9 @@ router.get('/user/:idUser', async (req, res) => {
     } = req.params;
 
     const user = await userManager.getUserById(idUser);
-        res.render("profile", {user});
+    res.render("profile", {
+        user
+    });
 
 })
 
@@ -110,11 +120,11 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/realtimeproducts', async(req, res)=>{
+router.get('/realtimeproducts', async (req, res) => {
 
     try {
 
-        const products = await productManager.getProducts(req.query);
+        const products = await productsManager.findAll();
 
         if (!products.length) {
             res.status(200).json({
@@ -122,7 +132,10 @@ router.get('/realtimeproducts', async(req, res)=>{
             })
         }
 
-        res.render("realTimeProducts");
+        res.render("realTimeProducts", {
+            stylesheetURL: '/css/first.css', // Ruta de la hoja de estilos principal
+            title: 'Productos en tiempo real'
+        });
 
         socketServer.on('connection', socket => {
             console.log(`Cliente conectado: ${socket.id} `);
@@ -133,7 +146,7 @@ router.get('/realtimeproducts', async(req, res)=>{
                 console.log(`Cliente desconectado: ${socket.id} `);
             });
         });
-        
+
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -142,6 +155,37 @@ router.get('/realtimeproducts', async(req, res)=>{
     }
 
 });
+
+router.get("/chat", (req, res) => {
+    res.render("chat", {
+        stylesheetURL: '/css/chat.css', // Ruta de la hoja de estilos principal
+        title: 'Chat'
+    });
+
+
+    socketServer.on('connection', socket => {
+
+        console.log(`Cliente conectado: ${socket.id}`);
+
+        //nuevo usuario
+        socket.on('newUser', (user) => {
+            //broadcast le llega a todos menos al implicado
+            socket.broadcast.emit("userConnected", user);
+            //you are connected
+            socket.emit('connected');
+            socket.on('message', async (info) => {
+                console.log(info);
+                const creado = await messageManager.createOne(info);
+                const messages = await messageManager.findAll();
+
+                socketServer.emit("chat", messages)
+            })
+        });
+
+    });
+
+});
+
 
 
 export default router;

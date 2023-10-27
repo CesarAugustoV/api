@@ -5,7 +5,6 @@ import {
 import {
     createHash
 } from "crypto";
-import { throws } from "assert";
 
 class UserManager {
 

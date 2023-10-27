@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { authMiddleware } from "../middlewares/auth.middleware.js"
-import userManager from "../UserManager.js";
+import {usersManager} from "../dao/db/manager/usersManager.js";
 
 const router = Router();
 
@@ -9,7 +8,7 @@ const router = Router();
 router.get('/', async (req, res) => {
     try {
 
-        const users = await userManager.getUsers(req.query);
+        const users = await usersManager.findAll();
 
         res.status(200).json({
             message: "Users found",
@@ -24,12 +23,11 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:pid', async (req, res) => {
+router.get('/:idUser', async (req, res) => {
+    const id = parseInt(req.params.idUser);
     try {
 
-        const id = parseInt(req.params.pid);
-
-        const user = await userManager.getUserById(id);
+        const user = await usersManager.findById(id);
 
         if (!user) {
             return res.status(404).json({
@@ -51,19 +49,18 @@ router.get('/:pid', async (req, res) => {
     }
 });
 
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', async (req, res) => {
 
     const {
-        nombres,
-        correo,
-        telefono,
-        code,
-        password, 
-        age
+        first_name,
+        last_name,
+        email,
+        password,
+
     } = req.body;
 
     
-    if (!nombres || !correo || !telefono || !password || !code || !age) {
+    if (!first_name || !last_name || !email || !password ) {
         
         return res.status(404).json({
             message: 'Some data is missing.'
@@ -72,11 +69,11 @@ router.post('/', authMiddleware, async (req, res) => {
     
     try {
 
-        const response = await userManager.addUser(req.body);
+        const createUser = await usersManager.createOne(req.body);
 
         res.status(200).json({
             message: "User created",
-            user: response
+            user: createUser
         })
 
     } catch (error) {
@@ -87,13 +84,13 @@ router.post('/', authMiddleware, async (req, res) => {
     }
 });
 
-router.delete('/:pid', async (req, res) => {
+router.delete('/:idUser', async (req, res) => {
     const {
-        pid
+        idUser
     } = req.params;
 
     try {
-        const response = await userManager.deleteUser(+pid);
+        const response = await usersManager.deleteOne(+idUser);
 
         if (!response) {
             return res.status(404).json({

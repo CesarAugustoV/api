@@ -1,0 +1,22 @@
+
+<div class="body">
+<div class="chat-container">
+    <h3 class="chat-title">Chat</h3>
+    <div class="chat" id="chat">
+        <!-- Aquí se agregarán los mensajes -->
+    </div>
+    <div class="input-box">
+        <h4 id="name" class="user-name">Usuario 1</h4>
+        <form id="chatForm" class="message-form">
+            <input type="text" name="message" id="message" class="message-input" placeholder="Escribe un mensaje...">
+            <input type="submit" value="SEND" class="message-submit">
+        </form>
+    </div>
+</div>
+</div>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js"></script>

@@ -4,17 +4,12 @@ import usersRouter from "./routes/users.router.js"
 import ordersRouter from "./routes/orders.router.js"
 import cartsRouter from "./routes/carts.router.js"
 import viewsRouter from "./routes/views.router.js"
+import { __dirname } from "./utils.js";
+import { engine } from "express-handlebars";
+import { Server } from "socket.io";
+//DB
+import "./db/configDB.js";
 
-import {
-    __dirname
-} from "./utils.js";
-import {
-    engine
-} from "express-handlebars";
-
-import {
-    Server
-} from "socket.io";
 
 
 const app = express();

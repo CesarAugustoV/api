@@ -1,29 +1,30 @@
 <h3>Agregar Producto</h3>
 <form id="form">
 
-    Title: <input type="text" name="title" id="title"><br>
-    Description: <textarea name="description" id="description"></textarea><br>
-    Code: <input type="text" name="code" id="code"><br>
-    Price: <input type="text" name="price" id="price"><br>
-    Stock: <input type="text" name="stock" id="stock"><br>
-    Category: <input type="text" name="category" id="category"><br>
+    name: <input type="text" name="name" id="name"><br>
+    price: <input type="number" name="price" id="price"><br>
+    stock: <input type="number" name="stock" id="stock"><br>
+    category: <input type="text" name="category" id="category"><br>
+    decription: <textarea type="text" name="decription" id="decription"></textarea><br>
 
     <input type="submit" value="Submit">
 </form>
-
+<div>
+<h3>Eliminar producto</h3>
 <form id="formDelete" method="post">
-    ID: <input type="number" name="id" id="id"><br>
+    ID: <input type="text" name="id" id="id"><br>
     <input type="submit" value="Submit">
 </form>
+</div>
 
 <table border="1">
     <thead>
         <tr>
             <th>ID</th>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Precio</th>
+            <th>Name</th>
+            <th>Price</th>
             <th>Stock</th>
+            <th>Decription</th>
             <th>Categoría</th>
         </tr>
     </thead>
