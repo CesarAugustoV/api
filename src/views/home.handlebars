@@ -1,26 +1,24 @@
-
-<h1>Lista de Productos</h1>
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>name</th>
-            <th>price</th>
-            <th>stock</th>
-            <th>decription</th>
-            <th>Categoría</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each products}}
-        <tr>
-            <td>{{id}}</td>
-            <td>{{title}}</td>
-            <td>{{description}}</td>
-            <td>${{price}}</td>
-            <td>{{stock}}</td>
-            <td>{{category}}</td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<div class="body">
+    <div class="container">
+        <h2>Bienvenido {{first_name}} {{last_name}}</h2>
+        <h1>Lista de Productos</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td>{{price}}</td>
+                    <td>{{stock}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

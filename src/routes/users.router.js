@@ -69,12 +69,14 @@ router.post('/', async (req, res) => {
     
     try {
 
-        const createUser = await usersManager.createOne(req.body);
+        const createdUser = await usersManager.createOne(req.body);
 
-        res.status(200).json({
-            message: "User created",
-            user: createUser
-        })
+        // res.status(200).json({
+        //     message: "User created",
+        //     user: createdUser
+        // })
+
+        res.redirect(`views/home/${createdUser._id}`);
 
     } catch (error) {
         res.status(500).json({
@@ -158,7 +160,7 @@ router.post('/signup', async (req, res)=>{
 
     try {
         console.log('aqui');
-        const response = await userManager.addUser(req.body);
+        const response = await usersManager.addUser(req.body);
 
         res.redirect(`/api/views/user/${response.id}`)
 

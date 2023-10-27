@@ -1,6 +1,6 @@
 import { usersModel } from "../models/users.model.js";
 
-class ProductsManager {
+class UsersManager {
     async findAll(){
         const response = await usersModel.find();
         return response;
@@ -28,4 +28,4 @@ class ProductsManager {
     }
 }
 
-export const usersManager = new ProductsManager();
+export const usersManager = new UsersManager();

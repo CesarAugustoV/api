@@ -1,8 +1,6 @@
 import {
     Router
 } from "express";
-import userManager from "../UserManager.js";
-import productManager from "../ProductManager.js";
 import {
     socketServer
 } from "../server.js"
@@ -12,79 +10,31 @@ import {
 import {
     __dirname
 } from "../utils.js";
-import {
-    messageManager
-} from "../dao/db/manager/messagesManager.js";
+import { usersManager } from "../dao/db/manager/usersManager.js";
 
 const router = Router();
 
-const user = {
-
-    first_name: "Cesar",
-    last_name: "Vicci",
-    email: "cesarvicci@gmail.com"
-
-}
-
-const users = [{
-        first_name: "Cesar",
-        last_name: "Vicci",
-        email: "cesarvicci@gmail.com"
-    },
-    {
-        first_name: "Augusto",
-        last_name: "Vicci",
-        email: "cesarvicci@gmail.com"
-    },
-    {
-        first_name: "Julio",
-        last_name: "Aparcedo",
-        email: "Julio@gmail.com"
-    },
-    {
-        first_name: "Nora",
-        last_name: "Aparcedo",
-        email: "Nora@gmail.com"
-    },
-    {
-        first_name: "Ines",
-        last_name: "Vicci",
-        email: "Ines@gmail.com"
-    },
-    {
-        first_name: "Molly",
-        last_name: "Vicci",
-        email: "Molly@gmail.com"
-    },
-    {
-        first_name: "Keira",
-        last_name: "Vicci",
-        email: "Keira@gmail.com"
-    }
-]
-
-router.get('/view1', (req, res) => {
-    res.render("view1")
-})
-router.get('/view2', (req, res) => {
-    res.render("view2")
-})
-
-router.get('/user', (req, res) => {
-    res.render("user", {
-        user
-    })
-})
-
-router.get('/users', (req, res) => {
-    res.render("users", {
-        users
-    })
-})
 
 router.get('/signup', (req, res) => {
-    res.render("signup")
+    res.render("signup", {
+        stylesheetURL: '/css/signup.css', // Ruta de la hoja de estilos principal
+        title: 'Signup'
+    })
 })
+
+
+router.get('/home/:idUser', async(req, res)=>{
+    const {idUser} = req.params;
+    const user = await usersManager.findById(idUser);
+    console.log(user);
+    const products = await productsManager.findAll();
+    const {first_name, last_name} = user;
+    
+    res.render('home', {first_name, last_name, products, stylesheetURL: '/css/home.css', // Ruta de la hoja de estilos principal
+    title: 'Home'});
+})
+
+
 
 router.get('/user/:idUser', async (req, res) => {
     const {
