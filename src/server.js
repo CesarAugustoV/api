@@ -9,6 +9,7 @@ import { engine } from "express-handlebars";
 import { Server } from "socket.io";
 //DB
 import "./db/configDB.js";
+import { messageManager } from "./dao/db/manager/messagesManager.js";
 
 
 
@@ -49,3 +50,24 @@ const httpServer = app.listen(8080, () => {
 });
 
 export const socketServer = new Server(httpServer);
+
+socketServer.on('connection', (socket) => {
+    console.log(`Cliente conectado: ${socket.id}`);
+
+    socket.on('newUser', (user) => {
+        socket.broadcast.emit("userConnected", user);
+        socket.emit('connected');
+
+        socket.on('message', async (info) => {
+            console.log(info);
+            const creado = await messageManager.createOne(info);
+            const messages = await messageManager.findAll();
+
+            socketServer.emit("chat", messages);
+        });
+    });
+
+    socket.on('disconnect', () => {
+        console.log(`Cliente desconectado: ${socket.id}`);
+    });
+});

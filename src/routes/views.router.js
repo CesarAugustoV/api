@@ -12,7 +12,9 @@ import {
 import {
     __dirname
 } from "../utils.js";
-import { messageManager } from "../dao/db/manager/messagesManager.js";
+import {
+    messageManager
+} from "../dao/db/manager/messagesManager.js";
 
 const router = Router();
 
@@ -157,33 +159,11 @@ router.get('/realtimeproducts', async (req, res) => {
 });
 
 router.get("/chat", (req, res) => {
+    
     res.render("chat", {
         stylesheetURL: '/css/chat.css', // Ruta de la hoja de estilos principal
         title: 'Chat'
     });
-
-
-    socketServer.on('connection', socket => {
-
-        console.log(`Cliente conectado: ${socket.id}`);
-
-        //nuevo usuario
-        socket.on('newUser', (user) => {
-            //broadcast le llega a todos menos al implicado
-            socket.broadcast.emit("userConnected", user);
-            //you are connected
-            socket.emit('connected');
-            socket.on('message', async (info) => {
-                console.log(info);
-                const creado = await messageManager.createOne(info);
-                const messages = await messageManager.findAll();
-
-                socketServer.emit("chat", messages)
-            })
-        });
-
-    });
-
 });
 
 
