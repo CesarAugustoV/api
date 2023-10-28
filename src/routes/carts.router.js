@@ -1,5 +1,5 @@
 import { Router } from "express";
-import cartsManager from "../dao/filesystem/CartsManager.js"
+import {cartsManager} from "../dao/db/manager/cartsManager.js"
 
 
 const router = Router();
@@ -8,8 +8,7 @@ const router = Router();
 //Carts
 router.get('/', async (req, res) => {
     try {
-
-        const carts = await cartsManager.getCarts(req.query);
+        const carts = await cartsManager.findAll();
 
         res.status(200).json({
             message: "Products found",
@@ -29,7 +28,7 @@ router.get('/:cid', async (req, res) => {
 
         const id = parseInt(req.params.cid);
 
-        const cart = await cartsManager.getCartById(id);
+        const cart = await cartsManager.findById(id);
 
         if (!cart) {
             return res.status(404).json({
@@ -58,7 +57,7 @@ router.post('/', async (req, res) => {
     } = req.body;
 
     try {
-        const response = await cartsManager.addCart(products);
+        const response = await cartsManager.createOne(products);
 
         res.status(200).json({
             message: "Product created",
