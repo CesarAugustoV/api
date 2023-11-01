@@ -54,12 +54,15 @@ export const socketServer = new Server(httpServer);
 socketServer.on('connection', (socket) => {
     console.log(`Cliente conectado: ${socket.id}`);
 
-    socket.on('newUser', (user) => {
+    socket.on('newUser', async(user) => {
         socket.broadcast.emit("userConnected", user);
         socket.emit('connected');
+        
+        const messages = await messageManager.findAll();
+        socketServer.emit("chat", messages);
 
+        socketServer.emit("chat", messages);
         socket.on('message', async (info) => {
-            console.log(info);
             const creado = await messageManager.createOne(info);
             const messages = await messageManager.findAll();
 

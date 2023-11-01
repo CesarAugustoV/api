@@ -41,7 +41,7 @@ router.get('/user/:idUser', async (req, res) => {
         idUser
     } = req.params;
 
-    const user = await userManager.getUserById(idUser);
+    const user = await usersManager.findById(idUser);
     res.render("profile", {
         user
     });
@@ -51,7 +51,7 @@ router.get('/user/:idUser', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
 
-        const products = await productManager.getProducts(req.query);
+        const products = await productsManager.findAll();
 
         if (!products.length) {
             res.status(200).json({

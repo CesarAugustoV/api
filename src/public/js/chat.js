@@ -42,7 +42,7 @@ socketClient.on('userConnected', user => {
     }).showToast();
 })
 
-socketClient.on('connected', () => {
+socketClient.on('connected', async () => {
     Toastify({
         text: `Your are connected`,
         style: {
@@ -54,6 +54,14 @@ socketClient.on('connected', () => {
         gravity: "top",
         position: "left"
     }).showToast();
+
+    const messages = await messageManager.findAll();
+    const chat = messages.map(m => {
+            return `<p>${m.user}: ${m.message}</p>`
+        })
+        .join(" ");
+    divChat.innerHTML = chat;
+
 });
 
 form.onsubmit = (e) => {

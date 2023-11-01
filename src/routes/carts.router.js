@@ -23,10 +23,10 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:cid', async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
 
-        const id = parseInt(req.params.cid);
+        const {id} = req.params;
 
         const cart = await cartsManager.findById(id);
 
@@ -53,14 +53,20 @@ router.get('/:cid', async (req, res) => {
 router.post('/', async (req, res) => {
 
     const {
+        user,
         products = []
     } = req.body;
 
+    const obj = {
+        user,
+        products
+    }
+
     try {
-        const response = await cartsManager.createOne(products);
+        const response = await cartsManager.createOne(obj);
 
         res.status(200).json({
-            message: "Product created",
+            message: "Cart created",
             cart: response
         })
 
@@ -72,14 +78,15 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/:cid/product/:pid', async (req, res) => {
+router.put('/:cid/product/:pid', async (req, res) => {
 
 
     const { cid, pid } = req.params;
 
     try {
 
-        const response = await cartsManager.addProductCart(+cid, +pid);
+        const response = await cartsManager.addProducts(cid, pid);
+
 
         if (!response) {
             return res.status(404).json({

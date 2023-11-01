@@ -1,8 +1,12 @@
 import {
     Router
 } from "express";
-import {productsManager} from "../dao/db/manager/productsManager.js";
-import { socketServer } from "../server.js";
+import {
+    productsManager
+} from "../dao/db/manager/productsManager.js";
+import {
+    socketServer
+} from "../server.js";
 
 
 const router = Router();
@@ -35,20 +39,25 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
 
-    // const {
-    //     title,
-    //     description,
-    //     code,
-    //     price,
-    //     stock,
-    //     category
-    // } = req.body;
-
-    // if (!title || !description || !price || !stock || !code || !category) {
-    //     return res.status(404).json({
-    //         message: 'Some data is missing.'
-    //     })
-    // };
+    const {
+        name,
+        description,
+        price,
+        stock,
+        category,
+        quantity
+    } = req.body;
+    console.log(name,
+        description,
+        price,
+        stock,
+        category,
+        quantity);
+    if (!name || !description || !price || !stock || !category || !quantity) {
+        return res.status(404).json({
+            message: 'Some data is missing.'
+        })
+    };
 
     try {
 
@@ -72,7 +81,7 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:pid', async (req, res) => {
-    
+
     const id = parseInt(req.params.pid);
 
     try {
@@ -115,7 +124,8 @@ router.delete('/:pid', async (req, res) => {
         }
 
         res.status(200).json({
-            message: "Product deleted", deletedProduct
+            message: "Product deleted",
+            deletedProduct
         })
 
         const products = await productsManager.findAll();

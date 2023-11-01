@@ -1,5 +1,9 @@
-import { Router } from "express";
-import {usersManager} from "../dao/db/manager/usersManager.js";
+import {
+    Router
+} from "express";
+import {
+    usersManager
+} from "../dao/db/manager/usersManager.js";
 
 const router = Router();
 
@@ -24,10 +28,12 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:idUser', async (req, res) => {
-    const id = parseInt(req.params.idUser);
+    const { idUser } = req.params;
+
     try {
 
-        const user = await usersManager.findById(id);
+        const user = await usersManager.findById(idUser);
+
 
         if (!user) {
             return res.status(404).json({
@@ -49,6 +55,33 @@ router.get('/:idUser', async (req, res) => {
     }
 });
 
+// router.get('/:email', async (req, res) => {
+//     const { email } = req.params;
+
+//     try {
+
+//         const response = await usersManager.findByEmail(email);
+
+//         if (!response) {
+//             return res.status(404).json({
+//                 message: 'User not found whit the id provided'
+//             })
+//         }
+
+//         res.status(200).json({
+//             message: "User found",
+//             response
+//         })
+
+//     } catch (error) {
+
+//         res.status(500).json({
+//             message: error.message
+//         });
+
+//     }
+// });
+
 router.post('/', async (req, res) => {
 
     const {
@@ -59,14 +92,14 @@ router.post('/', async (req, res) => {
 
     } = req.body;
 
-    
-    if (!first_name || !last_name || !email || !password ) {
-        
+
+    if (!first_name || !last_name || !email || !password) {
+
         return res.status(404).json({
             message: 'Some data is missing.'
         })
     };
-    
+
     try {
 
         const createdUser = await usersManager.createOne(req.body);
@@ -114,14 +147,14 @@ router.delete('/:idUser', async (req, res) => {
 
 });
 
-router.put('/:pid', async (req, res) => {
+router.put('/:id', async (req, res) => {
     const {
-        pid
+        id
     } = req.params;
 
     try {
 
-        const response = await userManager.updateUser(+pid, req.body);
+        const response = await usersManager.updateOne(id, req.body);
 
         if (!response) {
             return res.status(404).json({
@@ -130,7 +163,8 @@ router.put('/:pid', async (req, res) => {
         }
 
         res.status(200).json({
-            message: "User updated", response
+            message: "User updated",
+            response
         })
 
     } catch (error) {
@@ -141,18 +175,18 @@ router.put('/:pid', async (req, res) => {
     }
 });
 
-router.post('/signup', async (req, res)=>{
+router.post('/signup', async (req, res) => {
     const {
         first_name,
         last_name,
         email,
-        password, 
+        password,
     } = req.body;
 
-    
-    
-    if (!first_name || !last_name || !email || !password ) {
-        
+
+
+    if (!first_name || !last_name || !email || !password) {
+
         return res.status(404).json({
             message: 'Some data is missing.'
         })

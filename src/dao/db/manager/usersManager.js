@@ -11,6 +11,11 @@ class UsersManager {
         return response;
     }
 
+    async findByEmail(email){
+        const response = await usersModel.findOne({email}).explain('executionStats');
+        return response;
+    }
+
     async createOne(obj){
         const response = await usersModel.create(obj);
         return response;
@@ -18,6 +23,7 @@ class UsersManager {
     }
 
     async updateOne(id, obj){
+        console.log(id, obj);
         const response = usersModel.updateOne({_id:id}, obj);
         return response;
     }
