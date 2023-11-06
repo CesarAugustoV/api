@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
-import mongoosePaginate from 'mongoose-paginate-v2';
 
-const usersSchema = new mongoose.Schema({
+const clientsSchema = new mongoose.Schema({
     first_name: {
         type: String,
         required: true
@@ -16,16 +15,14 @@ const usersSchema = new mongoose.Schema({
         unique: true,
         index: true //indexar propiedad para busqueda.
     },
-    password: {
+    gender: {
         type: String,
         required: true,
     },
-    gender:{
-        type: String
+    calificacion:{
+        type: Number,
+        required: true
     }
 });
 
-//añadimos el plugin paginate a el schema
-usersSchema.plugin(mongoosePaginate);
-
-export const usersModel = mongoose.model("Users", usersSchema);
+export const clientsModel = mongoose.model("Clients", clientsSchema);

@@ -12,7 +12,7 @@ const router = Router();
 router.get('/', async (req, res) => {
     try {
 
-        const users = await usersManager.findAll();
+        const users = await usersManager.findAll(req.query);
 
         res.status(200).json({
             message: "Users found",

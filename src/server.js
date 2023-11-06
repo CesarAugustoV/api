@@ -4,6 +4,7 @@ import usersRouter from "./routes/users.router.js"
 import ordersRouter from "./routes/orders.router.js"
 import cartsRouter from "./routes/carts.router.js"
 import viewsRouter from "./routes/views.router.js"
+import clientsRouter from "./routes/clients.router.js"
 import { __dirname } from "./utils.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
@@ -37,6 +38,7 @@ app.use('/api/users', usersRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/views', viewsRouter);
+app.use('/api/clients', clientsRouter)
 
 
 //home

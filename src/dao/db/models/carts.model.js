@@ -1,25 +1,17 @@
 import mongoose from "mongoose";
 
 const cartsSchema = new mongoose.Schema({
-    user: {
-        type: String
-    },
     products: [{
-        productId: {
-            type: String
-        },
-        name: {
-            type: String
-        },
-        price: {
-            type: Number
-        },
-        category: {
-            type: String
+        product: {
+            //tipo id de mongo
+            type: mongoose.SchemaTypes.ObjectId,
+            //referencia documento
+            ref: 'Products'
         },
         quantity: {
             type: Number
         },
+        _id: false
     }]
 });
 

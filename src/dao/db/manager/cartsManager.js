@@ -1,9 +1,6 @@
 import {
     cartsModel
 } from "../models/carts.model.js";
-import {
-    productsManager
-} from "./productsManager.js"
 
 class CartsManager {
     async findAll() {
@@ -11,52 +8,35 @@ class CartsManager {
         return result;
     }
 
-    async findById(id) {
-        const result = await cartsModel.findById(id);
-        return result;
+    async findCartById(id) {
+        //populate sirve para poblar la informacion desde el id. index por el modelo ref.
+        const response = await cartsModel.findById(id).populate('products.product', ['name', 'price']);
+        return response;
     }
 
-    async createOne(obj) {
-        const result = await cartsModel.create(obj)
-        return result;
+    async createCart() {
+        const newCart = {
+            products: []
+        }
+        const response = await cartsModel.create({newCart})
+        return response;
     }
 
     async addProducts(idCart, idProduct) {
 
-        // Busca el carrito por su ID
-        const cart = await this.findById(idCart);
-        if (!cart) {
-            throw new Error('Cart does not exist');
+        const cart = await cartsModel.findById(idCart);
+        
+        const productIndex = cart.products.findIndex(
+            (p)=> p.product.equals(idProduct)
+        );
+
+        if(productIndex === -1){
+            cart.products.push({product: idProduct, quantity: 1})
+        }else{
+            cart.products[productIndex].quantity++;
         }
 
-        // Busca el producto por su ID
-        const product = await productsManager.findById(idProduct);
-        if (!product) {
-            throw new Error('Product does not exist');
-        }
-
-        // Verifica si el producto ya existe en el carrito
-        const existingProduct = cart.products.find(p => p.productId === idProduct);
-
-        if (existingProduct) {
-            // Si el producto ya existe en el carrito, incrementa la cantidad
-            existingProduct.quantity += 1;
-        } else {
-            // Si el producto no existe en el carrito, agrégalo al arreglo
-            cart.products.push({
-                productId: idProduct,
-                name: product.name,
-                price: product.price,
-                category: product.category,
-                quantity: 1
-            });
-        }
-
-        // Guarda la actualización del carrito en la base de datos
-        const updatedCart = await cart.save();
-
-        return updatedCart;
-
+        return await cart.save();
     }
 
     async updateOne(id, obj) {

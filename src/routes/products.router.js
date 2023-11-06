@@ -16,16 +16,10 @@ const router = Router();
 router.get('/', async (req, res) => {
     try {
 
-        const products = await productsManager.findAll();
-
-        if (!products.length) {
-            res.status(200).json({
-                message: 'No products'
-            })
-        }
+        const products = await productsManager.findAll(req.query);
 
         res.status(200).json({
-            message: "Products found",
+            message: "Users found",
             products
         })
 
@@ -47,12 +41,7 @@ router.post('/', async (req, res) => {
         category,
         quantity
     } = req.body;
-    console.log(name,
-        description,
-        price,
-        stock,
-        category,
-        quantity);
+
     if (!name || !description || !price || !stock || !category || !quantity) {
         return res.status(404).json({
             message: 'Some data is missing.'
@@ -63,14 +52,14 @@ router.post('/', async (req, res) => {
 
         const createdProduct = await productsManager.createOne(req.body);
 
+        const products = await productsManager.findAll({limit:20, page:1});
+
+        socketServer.emit('products', products)
+
         res.status(200).json({
             message: "Product created",
             product: createdProduct
         });
-
-        const products = await productsManager.findAll();
-
-        socketServer.emit('products', products)
 
     } catch (error) {
         res.status(500).json({
