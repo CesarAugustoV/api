@@ -10,7 +10,12 @@ import {
 import {
     __dirname
 } from "../utils.js";
-import { usersManager } from "../dao/db/manager/usersManager.js";
+import {
+    usersManager
+} from "../dao/db/manager/usersManager.js";
+import {
+    cartsManager
+} from "../dao/db/manager/cartsManager.js";
 
 const router = Router();
 
@@ -23,15 +28,25 @@ router.get('/signup', (req, res) => {
 })
 
 
-router.get('/home/:idUser', async(req, res)=>{
-    const {idUser} = req.params;
+router.get('/home/:idUser', async (req, res) => {
+    const {
+        idUser
+    } = req.params;
     const user = await usersManager.findById(idUser);
     console.log(user);
     const products = await productsManager.findAll();
-    const {first_name, last_name} = user;
-    
-    res.render('home', {first_name, last_name, products, stylesheetURL: '/css/home.css', // Ruta de la hoja de estilos principal
-    title: 'Home'});
+    const {
+        first_name,
+        last_name
+    } = user;
+
+    res.render('home', {
+        first_name,
+        last_name,
+        products,
+        stylesheetURL: '/css/home.css', // Ruta de la hoja de estilos principal
+        title: 'Home'
+    });
 })
 
 router.get('/user/:idUser', async (req, res) => {
@@ -107,19 +122,31 @@ router.get('/realtimeproducts', async (req, res) => {
 });
 
 router.get("/chat", (req, res) => {
-    
+
     res.render("chat", {
         stylesheetURL: '/css/chat.css', // Ruta de la hoja de estilos principal
         title: 'Chat'
     });
 });
 
-router.get("/products",(req,res)=>{
-    res.render("products",{
+router.get("/products", (req, res) => {
+    res.render("products", {
         stylesheetURL: '/css/products.css', // Ruta de la hoja de estilos principal
         title: 'Products'
     })
 })
+
+router.get("/carts/:cid", async (req, res) => {
+    const {
+        cid
+    } = req.params;
+    const data = await cartsManager.findCartById(cid);
+
+    res.json({
+        cartProducts: data.products
+    });
+});
+
 
 
 
