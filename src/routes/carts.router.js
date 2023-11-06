@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/:cid/product/:pid', async (req, res) => {
+router.post('/:cid/products/:pid', async (req, res) => {
 
 
     const { cid, pid } = req.params;
@@ -93,6 +93,72 @@ router.post('/:cid/product/:pid', async (req, res) => {
             message: error.message
         });
     }
+});
+
+router.delete('/:cid/products/:pid', async (req, res) => {
+    const { cid, pid } = req.params;
+
+    try {
+        const response = await cartsManager.deleteOneProduct(cid, pid);
+
+
+        res.status(200).json({
+            response,
+            message: "Product deleted"
+        })
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+});
+
+router.put('/:cid/products/:pid', async (req, res) => {
+    const { cid, pid } = req.params;
+    const {quantity} = req.body;
+
+    try {
+        const response = await cartsManager.updateOneProduct(cid, pid, quantity);
+
+        res.status(200).json({
+            response,
+            message: "Product deleted"
+        })
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+});
+
+router.delete('/:cid', async (req, res) => {
+    const { cid } = req.params;
+
+    try {
+        const response = await cartsManager.deleteOneCart(cid);
+
+
+        res.status(200).json({
+            response,
+            message: "Cart deleted"
+        })
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
 });
 
 

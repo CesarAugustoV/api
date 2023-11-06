@@ -23,9 +23,9 @@ class ProductsManager {
     
         const info = {
             count: response.totalDocs,
-            pages: response.totalPages,
-            next: response.hasNextPage ? `http://localhost:8080/api/products?page=${response.nextPage}` : null,
-            prev: response.hasPrevPage ? `http://localhost:8080/api/products?page=${response.prevPage}` : null
+            totalPages: response.totalPages,
+            nextPage: response.hasNextPage ? `http://localhost:8080/api/products?page=${response.nextPage}` : null,
+            prevPage: response.hasPrevPage ? `http://localhost:8080/api/products?page=${response.prevPage}` : null
         };
     
         if (sort) {

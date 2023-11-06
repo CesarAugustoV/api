@@ -116,6 +116,10 @@ router.get("/chat", (req, res) => {
     });
 });
 
+router.get("/products",(req,res)=>{
+    //trabajar en la vista
+})
+
 
 
 export default router;
