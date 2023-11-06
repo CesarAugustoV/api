@@ -126,7 +126,28 @@ router.put('/:cid/products/:pid', async (req, res) => {
 
         res.status(200).json({
             response,
-            message: "Product deleted"
+            message: "Product Updated"
+        })
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+});
+
+router.put('/:cid', async (req, res) => {
+    const { cid } = req.params;
+
+    try {
+        const response = await cartsManager.updateCartProducts(cid, req.body);
+
+        res.status(200).json({
+            response,
+            message: "Products Updated"
         })
 
     } catch (error) {

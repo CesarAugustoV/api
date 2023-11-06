@@ -51,6 +51,24 @@ class CartsManager {
         return result;
     }
 
+    async updateCartProducts(idCart, updatedProduct) {
+        const cart = await cartsModel.findById(idCart);
+    
+        const productIndex = cart.products.findIndex(
+            (p) => p.product.equals(updatedProduct.product)
+        );
+    
+        if (productIndex === -1) {
+            // Si el producto no existe en el carrito, lo agregamos.
+            cart.products.push(updatedProduct);
+        } else {
+            // Si el producto ya existe, actualizamos la cantidad.
+            cart.products[productIndex].quantity += updatedProduct.quantity;
+        }
+    
+        return await cart.save();
+    }
+
     async deleteOneProduct(idCart, idProduct) {
         const cart = await cartsModel.findById(idCart);
 
@@ -73,36 +91,34 @@ class CartsManager {
     }
 
     async deleteOneCart(idCart) {
-        const result = await cartsModel.deleteOne({
-            _id: idCart
-        });
+        const cart = await cartsModel.findById(idCart);
 
-        if (result.deletedCount === 1) {
-            return true; // Devuelve true para indicar que se eliminó el carrito con éxito.
-        } else {
-            return false; // Devuelve false para indicar que no se encontró el carrito con el ID especificado.
-        }
-    }
-
-    async updateOneProduct(cid, pid, quantity) {
-        const cart = await cartsModel.findById(cid);
-
-        const productIndex = cart.products.findIndex(
-            (p) => p.product.equals(pid)
-        );
-
-        if (productIndex !== -1) {
-            if (quantity === 0) {
-                // Si la quantity deseada es 0, eliminamos el producto del carrito.
-                cart.products.splice(productIndex, 1);
-            } else {
-                // Modificamos la quantity del producto en el carrito con la nueva cantidad deseada.
-                cart.products[productIndex].quantity = quantity;
-            }
-        }
-
+        // Limpia el contenido de cart.products
+        cart.products = [];
+        
         return await cart.save();
     }
+
+    async updateCartProducts(idCart, updatedProducts) {
+        const cart = await cartsModel.findById(idCart);
+    
+        updatedProducts.forEach(updatedProduct => {
+            const productIndex = cart.products.findIndex(
+                (p) => p.product.equals(updatedProduct.product)
+            );
+    
+            if (productIndex === -1) {
+                // Si el producto no existe en el carrito, lo agregamos.
+                cart.products.push(updatedProduct);
+            } else {
+                // Si el producto ya existe, actualizamos la cantidad.
+                cart.products[productIndex].quantity += updatedProduct.quantity;
+            }
+        });
+    
+        return await cart.save();
+    }
+    
 }
 
 export const cartsManager = new CartsManager();

@@ -34,8 +34,6 @@ router.get('/home/:idUser', async(req, res)=>{
     title: 'Home'});
 })
 
-
-
 router.get('/user/:idUser', async (req, res) => {
     const {
         idUser
@@ -117,7 +115,10 @@ router.get("/chat", (req, res) => {
 });
 
 router.get("/products",(req,res)=>{
-    //trabajar en la vista
+    res.render("products",{
+        stylesheetURL: '/css/products.css', // Ruta de la hoja de estilos principal
+        title: 'Products'
+    })
 })
 
 

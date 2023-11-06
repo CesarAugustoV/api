@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
         const products = await productsManager.findAll(req.query);
 
         res.status(200).json({
-            message: "Users found",
+            message: "Products found",
             products
         })
 

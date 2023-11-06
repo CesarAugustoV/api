@@ -20,9 +20,10 @@ class ProductsManager {
         }
     
         const response = await productsModel.paginate(filter, options);
-    
+        console.log(response);
         const info = {
             count: response.totalDocs,
+            actualPage: response.page,
             totalPages: response.totalPages,
             nextPage: response.hasNextPage ? `http://localhost:8080/api/products?page=${response.nextPage}` : null,
             prevPage: response.hasPrevPage ? `http://localhost:8080/api/products?page=${response.prevPage}` : null
