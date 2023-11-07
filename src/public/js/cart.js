@@ -1,5 +1,6 @@
 function createCartList(cartData) {
     const cartList = document.getElementById("cart-list");
+    let totalAmount = 0; // Inicializa el total a pagar
 
     cartData.forEach(item => {
         const row = document.createElement("tr");
@@ -13,8 +14,9 @@ function createCartList(cartData) {
         const quantity = document.createElement("td");
         quantity.textContent = item.quantity;
 
+        const itemTotal = item.product.price * item.quantity; // Total por producto
         const total = document.createElement("td");
-        total.textContent = `$${(item.product.price * item.quantity).toFixed(2)}`;
+        total.textContent = `$${itemTotal.toFixed(2)}`;
 
         row.appendChild(productName);
         row.appendChild(price);
@@ -22,7 +24,18 @@ function createCartList(cartData) {
         row.appendChild(total);
 
         cartList.appendChild(row);
+
+        totalAmount += itemTotal; // Agrega el total de este producto al total general
     });
+
+    // Agrega una fila para mostrar el total a pagar
+    const totalRow = document.createElement("tr");
+    totalRow.innerHTML = `
+        <td colspan="3"><strong>Total a Pagar</strong></td>
+        <td><strong>$${totalAmount.toFixed(2)}</strong>
+    `;
+
+    cartList.appendChild(totalRow);
 }
 
 const cartId = document.querySelector('.cartId').innerHTML;
@@ -35,7 +48,7 @@ fetch(`http://localhost:8080/api/carts/${cartId}`)
         return response.json();
     })
     .then(data => {
-        // Llama a la función para crear la lista de productos
+        // Llama a la función para crear la lista de productos y mostrar el total a pagar
         createCartList(data.cart.products);
     })
     .catch(error => {

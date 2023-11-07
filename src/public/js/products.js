@@ -7,6 +7,7 @@
     let cartId;
 
     cartButton.addEventListener('click', () => {
+
         // Construye el URL de redirección
         const redirectURL = `http://localhost:8080/api/views/carts/${cartId}`;
 
@@ -55,6 +56,12 @@
         card.appendChild(productIdInput);
 
         addButton.addEventListener('click', (ev) => {
+
+            Swal.fire({
+                title: "Added",
+                text: "Agregado",
+                icon: "success"
+            });
 
             const productId = ev.target.parentNode.parentNode.querySelector('.product-id').value;
             // Verificar si ya tienes un carrito creado
