@@ -136,7 +136,6 @@
     // Función para agregar un producto a un carrito
     function addProductToCart(cartId, productId) {
 
-        console.log(cartId, productId);
 
         fetch(`http://localhost:8080/api/carts/${cartId}/products/${productId}`, {
                 method: 'POST',

@@ -33,7 +33,7 @@ router.get('/home/:idUser', async (req, res) => {
         idUser
     } = req.params;
     const user = await usersManager.findById(idUser);
-    console.log(user);
+
     const products = await productsManager.findAll();
     const {
         first_name,
@@ -140,10 +140,11 @@ router.get("/carts/:cid", async (req, res) => {
     const {
         cid
     } = req.params;
-    const data = await cartsManager.findCartById(cid);
 
-    res.json({
-        cartProducts: data.products
+    res.render("cart", {
+        stylesheetURL: '/css/cart.css', // Ruta de la hoja de estilos principal
+        title: 'Cart',
+        cid
     });
 });
 

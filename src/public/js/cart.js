@@ -1,28 +1,44 @@
-// cart.js
-document.addEventListener("DOMContentLoaded", function() {
-    // Accede a cartData directamente
-    console.log(cartData);
-});
+function createCartList(cartData) {
+    const cartList = document.getElementById("cart-list");
 
+    cartData.forEach(item => {
+        const row = document.createElement("tr");
 
+        const productName = document.createElement("td");
+        productName.textContent = item.product.name;
 
+        const price = document.createElement("td");
+        price.textContent = `$${item.product.price.toFixed(2)}`;
 
-// const cartItemsContainer = document.getElementById("cart-items");
-// const cartProducts = data.products;
+        const quantity = document.createElement("td");
+        quantity.textContent = item.quantity;
 
-// cartProducts.forEach(product => {
-//     const cartItem = document.createElement("li");
-//     cartItem.className = "cart-item";
-    
-//     const itemName = document.createElement("span");
-//     itemName.className = "item-name";
-//     itemName.textContent = product.product.name;
+        const total = document.createElement("td");
+        total.textContent = `$${(item.product.price * item.quantity).toFixed(2)}`;
 
-//     const itemPrice = document.createElement("span");
-//     itemPrice.className = "item-price";
-//     itemPrice.textContent = `$ ${product.product.price}`;
+        row.appendChild(productName);
+        row.appendChild(price);
+        row.appendChild(quantity);
+        row.appendChild(total);
 
-//     cartItem.appendChild(itemName);
-//     cartItem.appendChild(itemPrice);
-//     cartItemsContainer.appendChild(cartItem);
-// });
+        cartList.appendChild(row);
+    });
+}
+
+const cartId = document.querySelector('.cartId').innerHTML;
+
+fetch(`http://localhost:8080/api/carts/${cartId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`La solicitud falló con estado: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Llama a la función para crear la lista de productos
+        createCartList(data.cart.products);
+    })
+    .catch(error => {
+        // Maneja los errores aquí.
+        console.error(error);
+    });
