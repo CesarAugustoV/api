@@ -64,18 +64,7 @@ router.get('/user/:idUser', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
 
-        const products = await productsManager.findAll();
-
-        if (!products.length) {
-            res.status(200).json({
-                message: 'No products'
-            })
-        }
-
-        res.render("home", {
-            products
-        });
-
+        res.redirect("/api/views/login")
 
     } catch (error) {
         res.status(500).json({
