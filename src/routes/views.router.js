@@ -20,12 +20,12 @@ import {
 const router = Router();
 
 
-router.get('/signup', (req, res) => {
-    res.render("signup", {
-        stylesheetURL: '/css/signup.css', // Ruta de la hoja de estilos principal
-        title: 'Signup'
-    })
-})
+// router.get('/signup', (req, res) => {
+//     res.render("signup", {
+//         stylesheetURL: '/css/signup.css', // Ruta de la hoja de estilos principal
+//         title: 'Signup'
+//     })
+// })
 
 
 router.get('/home/:idUser', async (req, res) => {
@@ -130,9 +130,13 @@ router.get("/chat", (req, res) => {
 });
 
 router.get("/products", (req, res) => {
+    if(!req.session.user){
+        return res.redirect("login")
+    }
     res.render("products", {
         stylesheetURL: '/css/products.css', // Ruta de la hoja de estilos principal
-        title: 'Products'
+        title: 'Products',
+        user: req.session.user
     })
 })
 
@@ -148,6 +152,26 @@ router.get("/carts/:cid", async (req, res) => {
     });
 });
 
+router.get('/login', (req, res)=>{
+    if(req.session.user){
+        return res.redirect("products")
+    }
+    res.render('login')
+})
+
+router.get('/signup', (req, res)=>{
+    if(req.session.user){
+        return res.redirect("products")
+    }
+    res.render('signup')
+});
+
+router.get('/products', (req, res)=>{
+    if(!req.session.user){
+        return res.redirect("login")
+    }
+    res.render('products', {user: req.session.user})
+})
 
 
 

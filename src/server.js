@@ -12,6 +12,14 @@ import { Server } from "socket.io";
 import "./db/configDB.js";
 import { messageManager } from "./dao/db/manager/messagesManager.js";
 
+//sesion
+import cookieParser from "cookie-parser";
+import cookieRouter from './routes/cookie.router.js';
+import sessionRouter from './routes/session.router.js';
+import session from "express-session";
+import MongoStore from "connect-mongo";
+
+
 
 
 const app = express();
@@ -21,8 +29,25 @@ app.use(express.json());
 //leer info que viene poor formularios
 app.use(express.urlencoded({
     extended: true
-}))
-app.use(express.static(__dirname + "/public"))
+}));
+app.use(express.static(__dirname + "/public"));
+app.use(cookieParser("SecretCookie"));
+
+//mongo
+const URI = 'mongodb+srv://CesarAugustoV:JlG1olNzA39gZPe0@miclustercafe.ahxuo0q.mongodb.net/session?retryWrites=true&w=majority';
+
+app.use(session({
+    //configuracion para guardar las sessiones en archivos
+    store: new MongoStore({
+        mongoUrl: URI,
+    }),
+    secret: "secretSession",
+    cookie: {
+        maxAge: 60000
+    }
+}));
+
+
 
 //handlebars
 //nombre de motor de plantilla, y la funcion
@@ -38,7 +63,11 @@ app.use('/api/users', usersRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/views', viewsRouter);
-app.use('/api/clients', clientsRouter)
+app.use('/api/clients', clientsRouter);
+
+//sesion y cookies
+app.use('/api/session', sessionRouter);
+app.use('/api/cookie', cookieRouter);
 
 
 //home
