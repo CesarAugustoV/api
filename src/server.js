@@ -19,7 +19,9 @@ import sessionRouter from './routes/session.router.js';
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
-
+//passport
+import "./passport.js"
+import passport from "passport";
 
 
 const app = express();
@@ -34,7 +36,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(cookieParser("SecretCookie"));
 
 //mongo
-const URI = 'mongodb+srv://CesarAugustoV:JlG1olNzA39gZPe0@miclustercafe.ahxuo0q.mongodb.net/session?retryWrites=true&w=majority';
+const URI = 'mongodb+srv://CesarAugustoV:JlG1olNzA39gZPe0@miclustercafe.ahxuo0q.mongodb.net/ecommerce?retryWrites=true&w=majority';
 
 app.use(session({
     //configuracion para guardar las sessiones en archivos
@@ -47,6 +49,9 @@ app.use(session({
     }
 }));
 
+//configuraciones de passport
+app.use(passport.initialize());
+app.use(passport.session())
 
 
 //handlebars

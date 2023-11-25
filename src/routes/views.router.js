@@ -119,13 +119,14 @@ router.get("/chat", (req, res) => {
 });
 
 router.get("/products", (req, res) => {
-    if(!req.session.user){
+    if(!req.session.passport){
         return res.redirect("login")
     }
+    const {first_name, email} = req.user;
     res.render("products", {
         stylesheetURL: '/css/products.css', // Ruta de la hoja de estilos principal
         title: 'Products',
-        user: req.session.user
+        user: { first_name, email}
     })
 })
 
@@ -155,13 +156,14 @@ router.get('/signup', (req, res)=>{
     res.render('signup')
 });
 
-router.get('/products', (req, res)=>{
-    if(!req.session.user){
-        return res.redirect("login")
-    }
-    res.render('products', {user: req.session.user})
-})
 
+router.get('/restaurar',(req, res)=>{
+    res.render("restaurar")
+});
+
+router.get('/error', (req, res)=>{
+    res.render('error')
+})
 
 
 export default router;

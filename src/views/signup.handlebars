@@ -1,8 +1,79 @@
-<form action="/api/session/signup" method="post">
-    First name: <input type="text" name="first_name" id="first_name">
-    Last name: <input type="text" name="last_name" id="last_name">
-    Email: <input type="email" name="email" id="email">
-    Password: <input type="password" name="password" id="password">
-    <input type="submit" value="SIGN UP">
+<head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
-</form>
+        .signup-container {
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: white;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input {
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .github-login {
+            margin-bottom: 10px;
+        }
+
+        button a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="signup-container">
+        <form action="/api/session/signup" method="post">
+            <label for="first_name">First name:</label>
+            <input type="text" name="first_name" id="first_name" required>
+
+            <label for="last_name">Last name:</label>
+            <input type="text" name="last_name" id="last_name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+
+            <input type="submit" value="SIGN UP">
+        </form>
+
+        <button class="github-login" onclick="location.href='/api/session/auth/github'">Iniciar sesión con
+            GitHub</button>
+    </div>
+
+</body>

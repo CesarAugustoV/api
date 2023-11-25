@@ -22,7 +22,7 @@ class UsersManager {
     }
 
     async findByEmail(email){
-        const response = await usersModel.findOne({email}).explain('executionStats');
+        const response = await usersModel.findOne({email});
         return response;
     }
 
@@ -33,7 +33,6 @@ class UsersManager {
     }
 
     async updateOne(id, obj){
-        console.log(id, obj);
         const response = usersModel.updateOne({_id:id}, obj);
         return response;
     }

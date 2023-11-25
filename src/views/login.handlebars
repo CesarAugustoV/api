@@ -1,9 +1,75 @@
-<form action="/api/session/login" method="post">
+<head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
-    Email: <input type="email" name="email" id="email">
-    Password: <input type="password" name="password" id="password">
-    <input type="submit" value="Login">
+        .login-container {
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: white;
+        }
 
-</form>
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
 
-<button><a href="/api/views/signup"> Sign up</a></button>
+        label {
+            margin-bottom: 5px;
+        }
+
+        input {
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .restore-password,
+        .github-login,
+        .signup {
+            margin-bottom: 10px;
+        }
+
+        button a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <form action="/api/session/login" method="post">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+
+            <input type="submit" value="Login">
+        </form>
+
+        <button class="restore-password"><a href="/api/views/restaurar">Restaurar Contraseña</a></button>
+        <button class="github-login" onclick="location.href='/api/session/auth/github'">Iniciar sesión con
+            GitHub</button>
+        <button class="signup"><a href="/api/views/signup">Registrarse</a></button>
+    </div>
