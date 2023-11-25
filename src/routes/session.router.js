@@ -100,9 +100,10 @@ router.get('/auth/github', passport.authenticate('github', {
     scope: ['user:email']
 }));
 
-router.get('/callback', passport.authenticate("github"), (req, res)=>{
-    res.send("probando")
-});
+router.get('/callback', passport.authenticate("github",{
+    successRedirect: "/api/views/products",
+    failureRedirect: "/api/views/error"
+}));
 
 router.post("/signup", passport.authenticate("signup", {
     successRedirect: "/api/views/products",
