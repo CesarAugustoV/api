@@ -4,6 +4,8 @@ import {
 import {
     usersManager
 } from "../dao/db/manager/usersManager.js";
+import { jwtValidation } from "../middlewares/jwt.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -27,13 +29,12 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:idUser', async (req, res) => {
+router.get('/:idUser',jwtValidation, authMiddleware, async (req, res) => {
     const { idUser } = req.params;
-
+    console.log(req.user);
     try {
 
         const user = await usersManager.findById(idUser);
-
 
         if (!user) {
             return res.status(404).json({

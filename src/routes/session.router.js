@@ -5,7 +5,8 @@ import passport from "passport";
 
 import {
     hashData,
-    compareData
+    compareData,
+    generateToken
 } from "../utils.js";
 import {
     usersManager
@@ -13,107 +14,132 @@ import {
 
 const router = Router();
 
-// router.post('/signup', async (req, res) => {
-//     const {
-//         first_name,
-//         last_name,
-//         email,
-//         password
-//     } = req.body;
+router.post('/signup', async (req, res) => {
+    const {
+        first_name,
+        last_name,
+        email,
+        password
+    } = req.body;
 
-//     if (!first_name, !last_name, !email, !password) {
-//         return res.status(400).json({
-//             message: 'All fields are required'
-//         })
-//     }
+    if (!first_name, !last_name, !email, !password) {
+        return res.status(400).json({
+            message: 'All fields are required'
+        })
+    }
 
-//     try {
-//         const hashPassword = await hashData(password);
+    try {
+        const hashPassword = await hashData(password);
 
-//         const createdUser = await usersManager.createOne({
-//             ...req.body,
-//             password: hashPassword
-//         });
-//         res.status(200).json({
-//             message: "user created",
-//             user: createdUser
-//         })
-//     } catch (error) {
-//         res.status(500).json({
-//             error
-//         })
-//     }
-// })
+        const createdUser = await usersManager.createOne({
+            ...req.body,
+            password: hashPassword
+        });
+        res.status(200).json({
+            message: "user created",
+            user: createdUser
+        })
+    } catch (error) {
+        res.status(500).json({
+            error
+        })
+    }
+})
 
-// router.post('/login', async (req, res) => {
-//     const {
-//         email,
-//         password
-//     } = req.body;
+router.post('/login', async (req, res) => {
+    const {
+        email,
+        password
+    } = req.body;
 
-//     if (!email, !password) {
-//         return res.status(400).json({
-//             message: 'All fields are required'
-//         })
-//     }
+    if (!email, !password) {
+        return res.status(400).json({
+            message: 'All fields are required'
+        })
+    }
 
-//     try {
-//         const user = await usersManager.findByEmail(email);
-//         if (!user) {
-//             return res.redirect('/api/views/signup');
-//         }
-//         const isPasswordValid = await compareData(password, user.password)
-//         if (!isPasswordValid) {
-//             return res.status(401).json({
-//                 message: "Password is not valid"
-//             })
-//         }
-//         console.log(email === "adminCoder@coder.com" && password === "adminCod3r123");
-//         const sessionInfo = email === "adminCoder@coder.com" && password === "adminCod3r123" ? {
-//             email,
-//             first_name: user.first_name,
-//             isAdmin: true
-//         } : {
-//             email,
-//             first_name: user.first_name,
-//             isAdmin: false
-//         };
+    try {
+        const user = await usersManager.findByEmail(email);
+        if (!user) {
+            return res.redirect('/signup');
+        }
+        const isPasswordValid = await compareData(password, user.password)
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                message: "Password is not valid"
+            })
+        }
+        //sessiones
+        // const sessionInfo = email === "adminCoder@coder.com" && password === "adminCod3r123" ? {
+        //     email,
+        //     first_name: user.first_name,
+        //     isAdmin: true
+        // } : {
+        //     email,
+        //     first_name: user.first_name,
+        //     isAdmin: false
+        // };
+        // req.session.user = sessionInfo;
+        // res.redirect('/api/views/products');
 
-//         req.session.user = sessionInfo;
-//         res.redirect('/api/views/products');
-//     } catch (error) {
-//         res.status(500).json({
-//             error
-//         })
-//     }
-// })
+        //JWT
+        const{first_name, last_name} = user;
+        const token = generateToken({first_name, last_name, email});
+        res.json({message: 'Token', token})
 
-// router.get('/signout', (req, res) => {
-//     req.session.destroy(() => {
-//         res.redirect('/api/views/login')
+
+    } catch (error) {
+        res.status(500).json({
+            error
+        })
+    }
+})
+
+router.get('/signout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/api/views/login')
+    });
+})
+
+// //SIGNUP - LOGIN - PASSPORT GITHUB
+
+// router.get('/auth/github', passport.authenticate('github', {
+//     scope: ['user:email']
+// }));
+
+// router.get('/callback', passport.authenticate("github", {
+//     successRedirect: "/products",
+//     failureRedirect: "/error"
+// }));
+
+// router.post("/signup", passport.authenticate("signup", {
+//     successRedirect: "/products",
+//     failureRedirect: "/error"
+// }));
+
+// router.post("/login", passport.authenticate("login", {
+//     successRedirect: "/products",
+//     failureRedirect: "/error"
+// }));
+
+// //SIGNUP - LOGIN - PASSPORT GOOGLE
+
+// router.get('/auth/google',
+//     passport.authenticate('google', {
+//         scope: ['profile', 'email']
+//     }));
+
+// router.get('/auth/google/callback',
+//     passport.authenticate('google', {
+//         failureRedirect: '/error'
+//     }),
+//     (req, res)=> {
+//         // Successful authentication, redirect home.
+//         res.redirect('/products');
 //     });
-// })
 
-//SIGNUP - LOGIN - PASSPORT GITHUB
 
-router.get('/auth/github', passport.authenticate('github', {
-    scope: ['user:email']
-}));
 
-router.get('/callback', passport.authenticate("github",{
-    successRedirect: "/api/views/products",
-    failureRedirect: "/api/views/error"
-}));
-
-router.post("/signup", passport.authenticate("signup", {
-    successRedirect: "/api/views/products",
-    failureRedirect: "/api/views/error"
-}));
-
-router.post("/login", passport.authenticate("login", {
-    successRedirect: "/api/views/products",
-    failureRedirect: "/api/views/error"
-}));
 
 router.post('/restaurar', async (req, res) => {
     const {
@@ -129,9 +155,8 @@ router.post('/restaurar', async (req, res) => {
         const passwordHashed = await hashData(password)
         user.password = passwordHashed;
         await user.save();
-        res.status(200).json({
-            message: "Password Updated"
-        })
+        res.redirect('/login')
+
     } catch (error) {
         res.status(500).json({
             error: error
@@ -142,7 +167,7 @@ router.post('/restaurar', async (req, res) => {
 
 router.get('/signout', (req, res) => {
     req.session.destroy(() => {
-        res.redirect('/api/views/login')
+        res.redirect('/login')
     });
 })
 

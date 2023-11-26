@@ -64,7 +64,7 @@ router.get('/user/:idUser', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
 
-        res.redirect("/api/views/login")
+        res.redirect("/login")
 
     } catch (error) {
         res.status(500).json({
@@ -142,23 +142,35 @@ router.get("/carts/:cid", async (req, res) => {
     });
 });
 
-router.get('/login', (req, res)=>{
-    if(req.session.user){
-        return res.redirect("products")
+router.get('/login', (req, res) => {
+    if (req.session.passport && req.session.passport.user) {
+        // El usuario está autenticado, redirige a la página de productos
+        return res.redirect("products");
+    } else {
+        // El usuario no está autenticado, renderiza la página de inicio de sesión
+        return res.render('login');
     }
-    res.render('login')
-})
+});
 
 router.get('/signup', (req, res)=>{
-    if(req.session.user){
-        return res.redirect("products")
+    if (req.session.passport && req.session.passport.user) {
+        // El usuario está autenticado, redirige a la página de productos
+        return res.redirect("products");
+    } else {
+        // El usuario no está autenticado, renderiza la página de inicio de sesión
+        return res.render('signup');
     }
-    res.render('signup')
 });
 
 
 router.get('/restaurar',(req, res)=>{
-    res.render("restaurar")
+    if (req.session.passport && req.session.passport.user) {
+        // El usuario está autenticado, redirige a la página de productos
+        return res.redirect("products");
+    } else {
+        // El usuario no está autenticado, renderiza la página de inicio de sesión
+        return res.render('restaurar');
+    }
 });
 
 router.get('/error', (req, res)=>{

@@ -9,7 +9,7 @@
     cartButton.addEventListener('click', () => {
 
         // Construye el URL de redirección
-        const redirectURL = `http://localhost:8080/carts/${cartId}`;
+        const redirectURL = `http://localhost:8080/api/views/carts/${cartId}`;
 
         // Redirige a la nueva página
         window.location.href = redirectURL;

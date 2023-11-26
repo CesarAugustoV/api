@@ -67,7 +67,6 @@ app.use('/api/products', productsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/api/views', viewsRouter);
 app.use('/api/clients', clientsRouter);
 
 //sesion y cookies
@@ -76,9 +75,8 @@ app.use('/api/cookie', cookieRouter);
 
 
 //home
-app.get('/', (req, res) => {
-    res.send('Probando Home...')
-})
+app.use('/', viewsRouter);
+
 
 //listar servidor 
 const httpServer = app.listen(8080, () => {

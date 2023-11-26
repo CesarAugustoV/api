@@ -18,11 +18,16 @@ const usersSchema = new mongoose.Schema({
     },
     password: {
         type: String,
+        required: true
     },
     gender:{
         type: String
     },
     isGithub: {
+        type: Boolean,
+        default: false
+    },
+    isGoogle:{
         type: Boolean,
         default: false
     }

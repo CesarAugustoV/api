@@ -9,6 +9,9 @@ import {
     Strategy as GithubStrategy
 } from "passport-github2";
 import {
+    Strategy as GoogleStrategy
+} from "passport-google-oauth20";
+import {
     hashData,
     compareData
 } from './utils.js';
@@ -99,7 +102,7 @@ passport.use("github", new GithubStrategy({
             first_name: profile._json.name.split(' ')[0],
             last_name: profile._json.name.split(' ')[1],
             email: profile.emails[0].value,
-            passport:" ",
+            password:" ",
             isGithub: true,
         };
 
@@ -114,6 +117,54 @@ passport.use("github", new GithubStrategy({
     }
 }));
 
+//GOOGLE
+passport.use('google', new GoogleStrategy(
+    {
+        clientID: '722009616291-fli2451r1peqgs0q2qao9m6v5prqdmm4.apps.googleusercontent.com',
+        clientSecret: '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',
+        callbackURL: "http://localhost:8080/api/session/auth/google/callback"
+    }, async function(accessToken, refreshToken, profile, done){
+
+        try {
+            const userDB = await usersManager.findByEmail(profile._json.email);
+            
+            if (userDB) {
+                if (userDB.isGoogle) {
+                    // Usuario de GitHub ya registrado
+                    return done(null, userDB);
+                } else {
+                    // Usuario encontrado pero no registrado como usuario de GitHub
+                    return done(null, false);
+                }
+            }
+    
+            // Usuario no encontrado, proceder con el registro
+            const infoUser = {
+                first_name: profile._json.given_name,
+                last_name: profile._json.family_name,
+                email: profile._json.email,
+                password:" ",
+                isGoogle: true,
+            };
+    
+            const createdUser = await usersManager.createOne(infoUser);
+            
+            console.log(createdUser);
+            // Usuario registrado con éxito
+            return done(null, createdUser);
+    
+        } catch (error) {
+            // Manejar errores
+            return done(error);
+        }
+
+
+
+
+        console.log('Profile', profile);
+        done(null, false)
+    }
+))
 
 
 //serialize y deserialize
