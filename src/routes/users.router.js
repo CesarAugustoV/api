@@ -4,8 +4,13 @@ import {
 import {
     usersManager
 } from "../dao/db/manager/usersManager.js";
-import { jwtValidation } from "../middlewares/jwt.middleware.js";
-import { authMiddleware } from "../middlewares/auth.middleware.js";
+import {
+    jwtValidation
+} from "../middlewares/jwt.middleware.js";
+import passport from "passport";
+import {
+    authMiddleware
+} from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -29,32 +34,37 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:idUser',jwtValidation, authMiddleware, async (req, res) => {
-    const { idUser } = req.params;
-    console.log(req.user);
-    try {
-
-        const user = await usersManager.findById(idUser);
-
-        if (!user) {
-            return res.status(404).json({
-                message: 'User not found whit the id provided'
+router.get('/:idUser',
+    //jwtValidation,
+    passport.authenticate('jwt', {
+        session: false
+    }),
+    authMiddleware(["ADMIN", "PREMIUM"]), 
+    async (req, res) => {
+        const {
+            idUser
+        } = req.params;
+        try {
+            const user = await usersManager.findById(idUser);
+            if (!user) {
+                return res.status(404).json({
+                    message: 'User not found whit the id provided'
+                })
+            }
+            
+            res.status(200).json({
+                message: "User found",
+                user
             })
+
+        } catch (error) {
+
+            res.status(500).json({
+                message: error.message
+            });
+
         }
-
-        res.status(200).json({
-            message: "User found",
-            user
-        })
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-});
+    });
 
 // router.get('/:email', async (req, res) => {
 //     const { email } = req.params;
@@ -90,7 +100,6 @@ router.post('/', async (req, res) => {
         last_name,
         email,
         password,
-
     } = req.body;
 
 
@@ -102,7 +111,6 @@ router.post('/', async (req, res) => {
     };
 
     try {
-
         const createdUser = await usersManager.createOne(req.body);
 
         // res.status(200).json({
@@ -194,7 +202,6 @@ router.post('/signup', async (req, res) => {
     };
 
     try {
-        console.log('aqui');
         const response = await usersManager.addUser(req.body);
 
         res.redirect(`/api/views/user/${response.id}`)

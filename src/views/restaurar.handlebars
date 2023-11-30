@@ -1,7 +1,53 @@
-<form action="/api/session/restaurar" method="post">
+<head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-    Email: <input type="email" name="email" id="email">
-    New password: <input type="password" name="password" id="password">
-    <input type="submit" value="Restaurar">
+        form {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
 
-</form>
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <title>Password Restoration Form</title>
+</head>
+
+<body>
+    <form action="/api/session/restaurar" method="post">
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required>
+
+        <label for="password">New Password:</label>
+        <input type="password" name="password" id="password" required>
+
+        <input type="submit" value="Restaurar">
+    </form>
+</body>

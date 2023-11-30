@@ -12,6 +12,10 @@ import {
     Strategy as GoogleStrategy
 } from "passport-google-oauth20";
 import {
+    Strategy as JWTStrategy
+} from "passport-jwt";
+import { ExtractJwt } from 'passport-jwt';
+import {
     hashData,
     compareData
 } from './utils.js';
@@ -157,15 +161,21 @@ passport.use('google', new GoogleStrategy(
             // Manejar errores
             return done(error);
         }
-
-
-
-
-        console.log('Profile', profile);
-        done(null, false)
     }
 ))
 
+
+const fromCookies = (req)=>{
+    return req.cookies.token
+}
+//JWT
+passport.use('jwt', new JWTStrategy({
+    //jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
+    secretOrKey: "secretJWT"
+}, async function(jwt_payload, done) {
+    done(null, jwt_payload);
+}));
 
 //serialize y deserialize
 passport.serializeUser((user, done) => {

@@ -11,6 +11,7 @@ import {
 import {
     usersManager
 } from "../dao/db/manager/usersManager.js";
+import { jwtValidation } from "../middlewares/jwt.middleware.js";
 
 const router = Router();
 
@@ -30,10 +31,11 @@ router.post('/signup', async (req, res) => {
 
     try {
         const hashPassword = await hashData(password);
-
+        console.log(req.body);
         const createdUser = await usersManager.createOne({
             ...req.body,
-            password: hashPassword
+            password: hashPassword,
+            role: "ADMIN"
         });
         res.status(200).json({
             message: "user created",
@@ -52,7 +54,7 @@ router.post('/login', async (req, res) => {
         password
     } = req.body;
 
-    if (!email, !password) {
+    if (!email || !password) {
         return res.status(400).json({
             message: 'All fields are required'
         })
@@ -83,11 +85,22 @@ router.post('/login', async (req, res) => {
         // res.redirect('/api/views/products');
 
         //JWT
-        const{first_name, last_name} = user;
-        const token = generateToken({first_name, last_name, email});
-        res.json({message: 'Token', token})
-
-
+        const {
+            first_name,
+            last_name,
+            role
+        } = user;
+        const token = generateToken({
+            first_name,
+            last_name,
+            email,
+            role
+        });
+        //res.json({message: 'Token', token})
+        res
+            .status(200)
+            .cookie('token', token, { httpOnly: true })
+            .json({ message: "Bienvenido", token });
     } catch (error) {
         res.status(500).json({
             error
@@ -141,7 +154,7 @@ router.get('/signout', (req, res) => {
 
 
 
-router.post('/restaurar', async (req, res) => {
+router.post('/restaurar',jwtValidation, async (req, res) => {
     const {
         email,
         password

@@ -14,7 +14,6 @@ const usersSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        index: true //indexar propiedad para busqueda.
     },
     password: {
         type: String,
@@ -30,6 +29,11 @@ const usersSchema = new mongoose.Schema({
     isGoogle:{
         type: Boolean,
         default: false
+    },
+    role: {
+        type: String,
+        enum: ['ADMIN', 'PREMIUM', 'USER'],
+        default: "USER"
     }
 });
 
