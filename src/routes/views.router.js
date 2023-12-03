@@ -16,6 +16,7 @@ import {
 import {
     cartsManager
 } from "../dao/db/manager/cartsManager.js";
+import passport from "passport";
 
 const router = Router();
 
@@ -63,7 +64,6 @@ router.get('/user/:idUser', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-
         res.redirect("/login")
 
     } catch (error) {
@@ -118,15 +118,23 @@ router.get("/chat", (req, res) => {
     });
 });
 
-router.get("/products", (req, res) => {
-    if(!req.session.passport){
-        return res.redirect("login")
-    }
-    const {first_name, email} = req.user;
+router.get("/products", passport.authenticate('current', {
+    session: false
+}), (req, res) => {
+    // if (!req.session.passport) {
+    //     return res.redirect("login")
+    // }
+    const {
+        first_name,
+        email
+    } = req.user;
     res.render("products", {
         stylesheetURL: '/css/products.css', // Ruta de la hoja de estilos principal
         title: 'Products',
-        user: { first_name, email}
+        user: {
+            first_name,
+            email
+        }
     })
 })
 
@@ -152,7 +160,7 @@ router.get('/login', (req, res) => {
     }
 });
 
-router.get('/signup', (req, res)=>{
+router.get('/signup', (req, res) => {
     if (req.session.passport && req.session.passport.user) {
         // El usuario está autenticado, redirige a la página de productos
         return res.redirect("products");
@@ -163,7 +171,7 @@ router.get('/signup', (req, res)=>{
 });
 
 
-router.get('/restaurar',(req, res)=>{
+router.get('/restaurar', (req, res) => {
     if (req.session.passport && req.session.passport.user) {
         // El usuario está autenticado, redirige a la página de productos
         return res.redirect("products");
@@ -173,7 +181,7 @@ router.get('/restaurar',(req, res)=>{
     }
 });
 
-router.get('/error', (req, res)=>{
+router.get('/error', (req, res) => {
     res.render('error')
 })
 

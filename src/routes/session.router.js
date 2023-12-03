@@ -20,10 +20,11 @@ router.post('/signup', async (req, res) => {
         first_name,
         last_name,
         email,
+        age,
         password
     } = req.body;
 
-    if (!first_name, !last_name, !email, !password) {
+    if (!first_name, !last_name, !email, !password, !age) {
         return res.status(400).json({
             message: 'All fields are required'
         })
@@ -101,6 +102,66 @@ router.post('/login', async (req, res) => {
             .status(200)
             .cookie('token', token, { httpOnly: true })
             .json({ message: "Bienvenido", token });
+    } catch (error) {
+        res.status(500).json({
+            error
+        })
+    }
+})
+
+router.post('/current', async (req, res) => {
+    const {
+        email,
+        password
+    } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({
+            message: 'All fields are required'
+        })
+    }
+
+    try {
+        const user = await usersManager.findByEmail(email);
+        if (!user) {
+            return res.redirect('/signup');
+        }
+        const isPasswordValid = await compareData(password, user.password)
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                message: "Password is not valid"
+            })
+        }
+        //sessiones
+        // const sessionInfo = email === "adminCoder@coder.com" && password === "adminCod3r123" ? {
+        //     email,
+        //     first_name: user.first_name,
+        //     isAdmin: true
+        // } : {
+        //     email,
+        //     first_name: user.first_name,
+        //     isAdmin: false
+        // };
+        // req.session.user = sessionInfo;
+        // res.redirect('/api/views/products');
+
+        //JWT
+        const {
+            first_name,
+            last_name,
+            role
+        } = user;
+        const token = generateToken({
+            first_name,
+            last_name,
+            email,
+            role
+        });
+        //res.json({message: 'Token', token})
+        res
+            .status(200)
+            .cookie('token', token, { httpOnly: true })
+            .redirect("/products");
     } catch (error) {
         res.status(500).json({
             error

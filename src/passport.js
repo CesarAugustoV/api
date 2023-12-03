@@ -170,12 +170,23 @@ const fromCookies = (req)=>{
 }
 //JWT
 passport.use('jwt', new JWTStrategy({
+    secretOrKey: "secretJWT",
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+//    jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
+}, async function(jwt_payload, done) {
+    done(null, jwt_payload);
+}));
+
+//current
+//JWT
+passport.use('current', new JWTStrategy({
     //jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
     secretOrKey: "secretJWT"
 }, async function(jwt_payload, done) {
     done(null, jwt_payload);
 }));
+
 
 //serialize y deserialize
 passport.serializeUser((user, done) => {
