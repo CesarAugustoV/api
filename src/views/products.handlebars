@@ -1,11 +1,8 @@
 <div>
-    <h2>WELCOME {{user.first_name}}</h2>
+    <h2>WELCOME {{user.first_name}} {{user.last_name}}</h2>
     <h4>Your email is: {{user.email}}</h4>
-    {{#if user.isAdmin}}
-        <h5> Rol: Admin </h5>
-    {{else}}
-        <h5> Rol: User </h5>
-    {{/if}}
+        <h5> Rol: {{user.role}} </h5>
+    
 
     <button><a href="/api/session/signout"> SIGN OUT</a></button>
 </div>

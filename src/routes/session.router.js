@@ -1,7 +1,6 @@
 import {
     Router
 } from "express";
-import passport from "passport";
 
 import {
     hashData,
@@ -132,18 +131,6 @@ router.post('/current', async (req, res) => {
                 message: "Password is not valid"
             })
         }
-        //sessiones
-        // const sessionInfo = email === "adminCoder@coder.com" && password === "adminCod3r123" ? {
-        //     email,
-        //     first_name: user.first_name,
-        //     isAdmin: true
-        // } : {
-        //     email,
-        //     first_name: user.first_name,
-        //     isAdmin: false
-        // };
-        // req.session.user = sessionInfo;
-        // res.redirect('/api/views/products');
 
         //JWT
         const {
@@ -157,7 +144,7 @@ router.post('/current', async (req, res) => {
             email,
             role
         });
-        //res.json({message: 'Token', token})
+        
         res
             .status(200)
             .cookie('token', token, { httpOnly: true })
@@ -171,7 +158,7 @@ router.post('/current', async (req, res) => {
 
 router.get('/signout', (req, res) => {
     req.session.destroy(() => {
-        res.redirect('/api/views/login')
+        res.redirect('/login')
     });
 })
 

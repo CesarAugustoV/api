@@ -17,6 +17,7 @@ import {
     cartsManager
 } from "../dao/db/manager/cartsManager.js";
 import passport from "passport";
+import jwt from 'jsonwebtoken';
 
 const router = Router();
 
@@ -124,15 +125,22 @@ router.get("/products", passport.authenticate('current', {
     // if (!req.session.passport) {
     //     return res.redirect("login")
     // }
+    console.log(req.cookies.token);
+    const decoded = jwt.verify(req.cookies.token, "secretJWT");
+    console.log('DECODED', decoded);
     const {
         first_name,
-        email
-    } = req.user;
+        last_name,
+        email,
+        role
+    } = decoded;
     res.render("products", {
         stylesheetURL: '/css/products.css', // Ruta de la hoja de estilos principal
         title: 'Products',
         user: {
             first_name,
+            last_name,
+            role,
             email
         }
     })
