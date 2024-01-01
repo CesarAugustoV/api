@@ -8,8 +8,9 @@ import clientsRouter from "./routes/clients.router.js"
 import { __dirname } from "./utils.js";
 import { engine } from "express-handlebars";
 import { Server } from "socket.io";
+
 //DB
-import "./db/configDB.js";
+import "./dao/configDB.js";
 import { messageManager } from "./dao/db/manager/messagesManager.js";
 
 //sesion
@@ -23,9 +24,14 @@ import MongoStore from "connect-mongo";
 import "./passport.js"
 import passport from "passport";
 
+//dotenv && commander
+import config from "./config.js";
+
+//childprocess
+import childProcess from "./routes/childprocess.js"
+
 
 const app = express();
-
 //configuramos el servidor para que pueda leer la informacion enviada por body
 app.use(express.json());
 //leer info que viene poor formularios
@@ -36,7 +42,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(cookieParser("SecretCookie"));
 
 //mongo
-const URI = 'mongodb+srv://CesarAugustoV:JlG1olNzA39gZPe0@miclustercafe.ahxuo0q.mongodb.net/ecommerce?retryWrites=true&w=majority';
+const URI = process.env.MONGO_URI;
 
 app.use(session({
     //configuracion para guardar las sessiones en archivos
@@ -77,6 +83,8 @@ app.use('/api/cookie', cookieRouter);
 //home
 app.use('/', viewsRouter);
 
+//bloq/no-bloq
+app.use('/api/childprocess', childProcess);
 
 //listar servidor 
 const httpServer = app.listen(8080, () => {
@@ -87,7 +95,7 @@ export const socketServer = new Server(httpServer);
 
 socketServer.on('connection', (socket) => {
     console.log(`Cliente conectado: ${socket.id}`);
-
+    
     socket.on('newUser', async(user) => {
         socket.broadcast.emit("userConnected", user);
         socket.emit('connected');

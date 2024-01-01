@@ -74,9 +74,6 @@
             }
         });
 
-
-
-
         return card;
     }
 
@@ -95,7 +92,6 @@
             return response.json(); // Convierte la respuesta a formato JSON
         })
         .then(data => {
-
             data.products.results.forEach(product => {
                 const productCard = createProductCard(product);
                 productContainer.appendChild(productCard);

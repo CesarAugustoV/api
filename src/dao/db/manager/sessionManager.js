@@ -1,24 +1,13 @@
 import {
     sessionModel
 } from "../models/session.model.js";
+import BasicManager from "./basic.manager.js";
 
-class SessionManager {
 
-    async findById(id) {
-        const response = await sessionModel.findById(id)
-        return response;
-    }
+class SessionManager extends BasicManager {
 
-    async findByEmail(email) {
-        const response = await sessionModel.findOne({
-            email
-        });
-        return response;
-    }
-
-    async createOne(obj) {
-        const response = await sessionModel.create(obj);
-        return response;
+    constructor(){
+        super(sessionModel)
     }
 
 }

@@ -171,7 +171,7 @@ const fromCookies = (req)=>{
 //JWT
 passport.use('jwt', new JWTStrategy({
     secretOrKey: "secretJWT",
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
 //    jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
 }, async function(jwt_payload, done) {
     done(null, jwt_payload);

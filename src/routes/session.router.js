@@ -31,7 +31,6 @@ router.post('/signup', async (req, res) => {
 
     try {
         const hashPassword = await hashData(password);
-        console.log(req.body);
         const createdUser = await usersManager.createOne({
             ...req.body,
             password: hashPassword,

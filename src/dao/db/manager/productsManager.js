@@ -20,7 +20,6 @@ class ProductsManager {
         }
     
         const response = await productsModel.paginate(filter, options);
-        console.log(response);
         const info = {
             count: response.totalDocs,
             actualPage: response.page,

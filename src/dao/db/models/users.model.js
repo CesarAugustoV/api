@@ -25,7 +25,7 @@ const usersSchema = new mongoose.Schema({
     },
     cart: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cart', // Asegúrate de que esté referenciando al modelo de Carts
+        ref: 'Cart',
     },
     isGithub: {
         type: Boolean,
